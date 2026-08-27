@@ -48,57 +48,27 @@ a:hover{color:var(--brass);}
    ============================================================ */
 .wave-strip{
   width:100%;
-  overflow:hidden;
   background:var(--night);
   border-top:1px solid var(--night-line);
   border-bottom:1px solid var(--night-line);
+  position:relative;
 }
-.wave-track{
-  display:flex;
-  width:max-content;
-  animation:wave-scroll 22s linear infinite;
-}
-.wave-track svg{
+.wave-strip canvas{
   display:block;
-  height:110px;
-  width:1400px;
-  flex-shrink:0;
-}
-.wave-ch1{
-  fill:none;
-  stroke:#C9645A;
-  stroke-opacity:.55;
-  stroke-width:1.6;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-}
-.wave-ch2{
-  fill:none;
-  stroke:#C9A227;
-  stroke-opacity:.4;
-  stroke-width:1.2;
-  stroke-linecap:round;
-  stroke-linejoin:round;
+  width:100%;
+  height:130px;
 }
 .wave-label{
   position:absolute;
+  top:10px;
+  left:clamp(20px,5vw,56px);
   font-family:"IBM Plex Mono", monospace;
   font-size:10.5px;
   letter-spacing:0.1em;
   text-transform:uppercase;
   color:var(--night-ink-soft);
   opacity:.6;
-}
-.wave-strip-inner{position:relative;}
-.wave-strip-inner .wave-label{top:10px; left:clamp(20px,5vw,56px);}
-
-@keyframes wave-scroll{
-  from{transform:translateX(0);}
-  to{transform:translateX(-1400px);}
-}
-
-@media (prefers-reduced-motion: reduce){
-  .wave-track{animation:none;}
+  z-index:2;
 }
 
 
