@@ -102,6 +102,11 @@ a:hover{color:var(--brass);}
   color:var(--night-ink-soft);
   opacity:.6;
 }
+.wordmark:hover .wm-title,
+.wordmark:hover .wm-title b,
+.wordmark:hover .wm-name{
+  color:#D98A80;
+}
 .topbar nav a{
   font-family:"IBM Plex Mono", monospace;
   font-size:12px;
