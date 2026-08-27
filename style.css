@@ -148,6 +148,7 @@ a:hover{color:var(--brass);}
 .hero{
   padding:clamp(48px,7vw,96px) clamp(20px,5vw,56px) clamp(28px,4vw,44px);
   max-width:1100px;
+  margin:0 auto;
   position:relative;
 }
 .hero::before{
@@ -191,15 +192,70 @@ a:hover{color:var(--brass);}
   font-size:18px;
   color:var(--ink-soft);
   max-width:62ch;
+  margin:0 0 18px;
+}
+.hero .name-note{
+  font-size:14px;
+  color:var(--ink-faint);
+  max-width:58ch;
   margin:0;
+  padding-top:14px;
+  border-top:1px solid var(--line-soft);
+}
+.hero .name-note em{
+  color:var(--brass);
+  font-style:normal;
 }
 
 /* ============================================================
-   CONTENT SHELL
+   STAT STRIP  (hero support — real numbers, not decoration)
    ============================================================ */
+.stat-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:clamp(28px,6vw,64px);
+  max-width:1100px;
+  margin:0 auto;
+  padding:8px clamp(20px,5vw,56px) 40px;
+}
+.stat{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.stat .num{
+  font-family:"Fraunces", serif;
+  font-weight:560;
+  font-size:34px;
+  color:var(--brass);
+  line-height:1;
+}
+.stat .label{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:11px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--ink-faint);
+}
+
+/* ============================================================
+   FULL-BLEED BAND  (breaks up long flat scroll)
+   ============================================================ */
+.band{
+  background:var(--paper-alt);
+  border-top:1px solid var(--line-soft);
+  border-bottom:1px solid var(--line-soft);
+  width:100vw;
+  margin:56px 0 56px calc(50% - 50vw);
+  padding:44px clamp(20px,5vw,56px);
+}
+.band .prose{max-width:var(--max); margin:0 auto; padding:0 0;}
+
+
 .shell{
   padding:0 clamp(20px,5vw,56px) 100px;
   max-width:1100px;
+  margin:0 auto;
 }
 .prose{max-width:var(--max);}
 .prose p{margin:0 0 20px;}
@@ -331,6 +387,14 @@ a:hover{color:var(--brass);}
   color:var(--brass);
   flex-shrink:0;
   padding-top:2px;
+}
+
+.byline{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:13px;
+  letter-spacing:0.04em;
+  color:var(--ink-faint);
+  margin:0 0 24px;
 }
 
 /* ============================================================
