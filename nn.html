@@ -33,6 +33,12 @@
   </nav>
 </div>
 
+<div class="wave-strip">
+  <span class="wave-label">Signal &middot; illustrative, not real recorded data</span>
+  <canvas id="brainwave" aria-hidden="true"></canvas>
+</div>
+
+
 <section class="hero">
   <div class="eyebrow">09 / Neural Nets</div>
   <h1>Neural Networks</h1>
@@ -96,5 +102,81 @@
   <span style="opacity:.75">Academic Integrity Disclaimer: AI tools were used to assist with website structure, layout, and styling. All written content, data analysis, and modeling were completed independently.</span>
 </footer>
 
+<script>
+(function(){
+  var canvas = document.getElementById('brainwave');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var w, h, t = 0;
+
+  function resize(){
+    var rect = canvas.getBoundingClientRect();
+    w = rect.width;
+    h = rect.height;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize', resize);
+  window.addEventListener('load', resize);
+  if(window.ResizeObserver){
+    new ResizeObserver(resize).observe(canvas);
+  }
+  resize();
+
+  // continuous traveling-wave function — never repeats/tiles, so no seam
+  function channelY(x, time, opts){
+    var v = 0;
+    v += Math.sin(x*opts.f1 - time*opts.s1) * opts.a1;
+    v += Math.sin(x*opts.f2 - time*opts.s2 + opts.p2) * opts.a2;
+    v += Math.sin(x*opts.f3 - time*opts.s3 + opts.p3) * opts.a3;
+    return v;
+  }
+
+  // envelope tapers amplitude to ~0 at both edges, so every line
+  // converges toward a flat point left and right — like a live signal
+  // bundle that only "reads" in the middle of the strip
+  function envelope(x){
+    var u = x / w;
+    return Math.pow(Math.sin(Math.PI * u), 1.15);
+  }
+
+  var channels = [
+    { f1:0.0095, s1:0.040, a1:15, f2:0.021, s2:0.024, a2:7,  f3:0.0045, s3:0.062, a3:9,  p2:0.6,  p3:2.1, baseOff:-16, color:'#C9645A', width:1.2, opacity:0.60 },
+    { f1:0.0130, s1:0.052, a1:12, f2:0.026, s2:0.033, a2:6,  f3:0.0060, s3:0.078, a3:7,  p2:1.4,  p3:0.4, baseOff:-8,  color:'#D98A80', width:1.1, opacity:0.46 },
+    { f1:0.0165, s1:0.061, a1:11, f2:0.031, s2:0.041, a2:5,  f3:0.0075, s3:0.090, a3:6,  p2:2.2,  p3:1.1, baseOff:0,   color:'#C9A227', width:1.1, opacity:0.50 },
+    { f1:0.0110, s1:0.047, a1:10, f2:0.024, s2:0.029, a2:5,  f3:0.0052, s3:0.070, a3:6,  p2:3.0,  p3:1.8, baseOff:8,   color:'#8A97B8', width:1.0, opacity:0.40 },
+    { f1:0.0200, s1:0.070, a1:9,  f2:0.036, s2:0.050, a2:4,  f3:0.0090, s3:0.100, a3:5,  p2:0.9,  p3:2.6, baseOff:16,  color:'#B76E76', width:1.0, opacity:0.42 }
+  ];
+
+  function drawChannel(opts){
+    ctx.beginPath();
+    ctx.strokeStyle = opts.color;
+    ctx.globalAlpha = opts.opacity;
+    ctx.lineWidth = opts.width;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    var baseY = h * 0.5 + opts.baseOff;
+    var step = 3;
+    for(var x = 0; x <= w; x += step){
+      var y = baseY + channelY(x, t, opts) * envelope(x);
+      if(x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,w,h);
+    for(var i = 0; i < channels.length; i++) drawChannel(channels[i]);
+    t += 0.06;
+    if(!reduceMotion) requestAnimationFrame(frame);
+  }
+
+  frame();
+})();
+</script>
 </body>
 </html>
