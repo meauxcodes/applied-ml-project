@@ -81,14 +81,27 @@ a:hover{color:var(--brass);}
   border-bottom:1px solid var(--night-line);
 }
 .wordmark{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  text-decoration:none;
+  line-height:1.2;
+}
+.wordmark .wm-title{
   font-family:"IBM Plex Mono", monospace;
   font-size:13px;
-  letter-spacing:0.14em;
+  letter-spacing:0.1em;
   text-transform:uppercase;
   color:var(--night-ink-soft);
-  text-decoration:none;
 }
-.wordmark b{color:var(--night-ink);}
+.wordmark .wm-title b{color:var(--night-ink); font-weight:600;}
+.wordmark .wm-name{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:10.5px;
+  letter-spacing:0.06em;
+  color:var(--night-ink-soft);
+  opacity:.6;
+}
 .topbar nav a{
   font-family:"IBM Plex Mono", monospace;
   font-size:12px;
