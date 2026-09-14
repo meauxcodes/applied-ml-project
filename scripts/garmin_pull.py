@@ -15,17 +15,23 @@ from garminconnect import Garmin
 
 # First run: logs in and saves tokens to ~/.garminconnect
 # Subsequent runs: loads saved tokens and auto-refreshes
+print("Creating session....")
 client = Garmin(
     email,
     password
 )
 client.login("~/.garminconnect")
+print("...session created")
 # the above code was provided by: github.com/cyberjunky/python-garminconnect
 
 ### This function takes the current date, and builds a list of all dates 
 ### from September 4th, 2026 (when I started wearing my Garmin), until the 
 ### current date. 
+
+print("Script stopwatch started...")
 time_start = time.time()
+
+print("Calculating dates since 4 SEP 2026")
 def calculate_dates():
     start_date = date(2026,9,4)
     day_total = date.today()-start_date
@@ -37,15 +43,17 @@ def calculate_dates():
 
 dates = calculate_dates()
 
+print("Pulling new Garmin data...")
 if Path("../data/raw/sam_garmin_data.csv").exists():
-    # the file exists so only pull today -2 days and onward
+    # the file exists so only pull up to today's date and repull the two previous days's data to grab any potential missed data.
+
     recent_days = [(date.today() - timedelta(days=i)).isoformat() for i in range(0, 2)]
     existing_data = pd.read_csv("../data/raw/sam_garmin_data.csv")
     existing_dates = existing_data["date"]
     new_data = []
     for day in dates:
         if day not in existing_dates.values or day in recent_days:
-            try:
+            try: #this will identify if any days don't get pulled for whatever reason; namely rate limiting
                 heart_rate_data = client.get_heart_rates(day)
                 time.sleep(2)
                 stress_data = client.get_stress_data(day)
@@ -126,6 +134,7 @@ if Path("../data/raw/sam_garmin_data.csv").exists():
     sam_garmin_data = pd.concat([existing_data, new_dataframe])
     sam_garmin_data = sam_garmin_data.drop_duplicates(subset="date", keep="last")
     sam_garmin_data.to_csv("../data/raw/sam_garmin_data.csv",index = False)
+    print("...CSV written")
 
 
 else:
@@ -209,9 +218,12 @@ else:
             print(f"Skipped {day}: {e}")
 
  
-
+    print("...Garmin data pulled")
+    print("Writing Garmin data to CSV...")     
     sam_garmin_data = pd.DataFrame(result)
     sam_garmin_data.to_csv("../data/raw/sam_garmin_data.csv",index = False)
+    print("...CSV written")
 
 time_end = time.time()
+print("Script stopwatch ended...")
 print(f"It took {time_end - time_start} seconds to complete this data pull.")
