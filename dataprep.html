@@ -7,6 +7,52 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,620&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+  .figure img { cursor: pointer; transition: opacity 0.15s; }
+  .figure img:hover { opacity: 0.85; }
+  #lightbox-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    cursor: zoom-out;
+  }
+  #lightbox-overlay.open { display: flex; }
+  #lightbox-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: default;
+  }
+  #lightbox-content img {
+    max-width: 100%;
+    max-height: 75vh;
+    border-radius: 4px;
+    cursor: default;
+  }
+  #lightbox-caption {
+    color: #EDEFF5;
+    margin-top: 14px;
+    text-align: center;
+    max-width: 700px;
+    font-size: 0.95em;
+  }
+  #lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 28px;
+    color: #EDEFF5;
+    font-size: 2em;
+    cursor: pointer;
+    line-height: 1;
+  }
+</style>
 </head>
 <body>
 
@@ -223,6 +269,32 @@
 
   frame();
 })();
+
+function openLightbox(imgEl) {
+  var figure = imgEl.closest('figure');
+  var caption = figure ? figure.querySelector('figcaption') : null;
+  document.getElementById('lightbox-img').src = imgEl.src;
+  document.getElementById('lightbox-img').alt = imgEl.alt;
+  document.getElementById('lightbox-caption').textContent = caption ? caption.textContent : '';
+  document.getElementById('lightbox-overlay').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox-overlay').classList.remove('open');
+}
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeLightbox();
+});
+document.querySelectorAll('.figure img').forEach(function(img){
+  img.addEventListener('click', function(){ openLightbox(img); });
+});
 </script>
+<div id="lightbox-overlay" onclick="closeLightbox()">
+  <span id="lightbox-close">&times;</span>
+  <div id="lightbox-content" onclick="event.stopPropagation()">
+    <img id="lightbox-img" src="" alt="">
+    <p id="lightbox-caption"></p>
+  </div>
+</div>
+
 </body>
 </html>
