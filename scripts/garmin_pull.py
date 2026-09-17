@@ -21,10 +21,11 @@ client = Garmin(
     password
 )
 client.login("~/.garminconnect")
-print("...session created")
 # the above code was provided by: github.com/cyberjunky/python-garminconnect
+print("...session created")
 
-### This function takes the current date, and builds a list of all dates 
+
+### This below function takes the current date, and builds a list of all dates 
 ### from September 4th, 2026 (when I started wearing my Garmin), until the 
 ### current date. 
 
@@ -112,7 +113,6 @@ if Path("../data/raw/sam_garmin_data.csv").exists():
                     "lowest respiration (all day)": respiration["lowestRespirationValue"],
                     "highest respiration (all day)": respiration["highestRespirationValue"],
                     "avg waking respiration": respiration["avgWakingRespirationValue"],
-                    "avg sleep respiration": respiration["avgSleepRespirationValue"],
                     "avg SpO2": spo2["averageSpO2"],
                     "lowest SpO2": spo2["lowestSpO2"],
                     "7 day avg SpO2": spo2["lastSevenDaysAvgSpO2"],
@@ -120,7 +120,6 @@ if Path("../data/raw/sam_garmin_data.csv").exists():
                     "hrv weekly avg": hrv["hrvSummary"]["weeklyAvg"],
                     "hrv last night avg": hrv["hrvSummary"]["lastNightAvg"],
                     "hrv last night 5min high": hrv["hrvSummary"]["lastNight5MinHigh"],
-                    "hrv status": hrv["hrvSummary"]["status"],
                     "moderate intensity minutes": intensity_minutes["moderateMinutes"],
                     "vigorous intensity minutes": intensity_minutes["vigorousMinutes"],
                     "weekly total intensity minutes": intensity_minutes["weeklyTotal"],
@@ -200,7 +199,6 @@ else:
                 "lowest respiration (all day)": respiration["lowestRespirationValue"],
                 "highest respiration (all day)": respiration["highestRespirationValue"],
                 "avg waking respiration": respiration["avgWakingRespirationValue"],
-                "avg sleep respiration": respiration["avgSleepRespirationValue"],
                 "avg SpO2": spo2["averageSpO2"],
                 "lowest SpO2": spo2["lowestSpO2"],
                 "7 day avg SpO2": spo2["lastSevenDaysAvgSpO2"],
@@ -208,7 +206,6 @@ else:
                 "hrv weekly avg": hrv["hrvSummary"]["weeklyAvg"],
                 "hrv last night avg": hrv["hrvSummary"]["lastNightAvg"],
                 "hrv last night 5min high": hrv["hrvSummary"]["lastNight5MinHigh"],
-                "hrv status": hrv["hrvSummary"]["status"],
                 "moderate intensity minutes": intensity_minutes["moderateMinutes"],
                 "vigorous intensity minutes": intensity_minutes["vigorousMinutes"],
                 "weekly total intensity minutes": intensity_minutes["weeklyTotal"],

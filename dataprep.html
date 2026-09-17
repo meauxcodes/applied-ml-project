@@ -24,14 +24,14 @@
   <nav class="rail">
       <a class="rail-item" href="about.html"><span class="n">00</span><span class="t">About</span></a>
       <a class="rail-item" href="index.html"><span class="n">01</span><span class="t">Introduction</span></a>
-      <a class="rail-item active" href="dataprep.html"><span class="n">02</span><span class="t">Data Prep&nbsp;&middot;&nbsp;EDA</span></a>
+      <a class="rail-item active" href="dataprep.html"><span class="n">02</span><span class="t">DataPrep_EDA</span></a>
       <a class="rail-item" href="clustering.html"><span class="n">03</span><span class="t">Clustering</span></a>
-      <a class="rail-item" href="pca.html"><span class="n">04</span><span class="t">PCA</span></a>
-      <a class="rail-item" href="naivebayes.html"><span class="n">05</span><span class="t">Naive Bayes</span></a>
-      <a class="rail-item" href="dectrees.html"><span class="n">06</span><span class="t">Dec Trees</span></a>
-      <a class="rail-item" href="svms.html"><span class="n">07</span><span class="t">SVM</span></a>
+      <a class="rail-item" href="pca.html"><span class="n">04</span><span class="t">PCA (PCA)</span></a>
+      <a class="rail-item" href="naivebayes.html"><span class="n">05</span><span class="t">NaiveBayes</span></a>
+      <a class="rail-item" href="dectrees.html"><span class="n">06</span><span class="t">DecTrees</span></a>
+      <a class="rail-item" href="svms.html"><span class="n">07</span><span class="t">SVMs</span></a>
       <a class="rail-item" href="regression.html"><span class="n">08</span><span class="t">Regression</span></a>
-      <a class="rail-item" href="nn.html"><span class="n">09</span><span class="t">Neural Nets</span></a>
+      <a class="rail-item" href="nn.html"><span class="n">09</span><span class="t">NN</span></a>
       <a class="rail-item" href="conclusions.html"><span class="n">10</span><span class="t">Conclusions</span></a>
   </nav>
 </div>
@@ -51,88 +51,92 @@
 <main class="shell">
 
 <div class="prose">
-  <div class="tk">
-  <span class="tk-label">To fill in — Module 1</span>
-  <ul>
-<li>How, where, and why the data was gathered.</li>
-<li>Websites / APIs used — include the site, a core endpoint, and an example GET URL.</li>
-<li>Links to all raw data (required) and all cleaning code (required).</li>
-<li>General cleaning steps: NAs/NaNs/missing values, incorrect values, outliers.</li>
-<li>At least 10 visualizations exploring the data — each with a title, labels, and a two-sentence description.</li>
-  </ul>
-</div>
+  <h2>Data Collection</h2>
+  <p>Each day, personal wearable health data is downloaded using the Garmin Connect API through <code>cyberjunky/python-garminconnect</code>. This API is a community-maintained Python client and is worth noting that this is not Garmin's official developer API. It authenticates using Garmin Connect login credentials, which are stored in a <code>.env</code> file and excluded from version control via <code>.gitignore</code>. After logging in, session tokens get cached locally so the script doesn't have to log in fresh every run.</p>
+  <p>The code builds a list of each date that has occurred since data collection started on September 4, 2026. Loops are then made through that list of dates, making API calls for each day and metric and saved to variables for simpler indexing. Right now, that's 40+ metrics per day. Examples of some of the key metrics are sleep stage breakdowns, heart rate variability, respiration rate, and blood oxygen saturation. This metric quantity will likely shrink once EDA identifies which features actually matter. Each API call includes a two-second delay, so the server doesn't get bogged down and days don't get skipped from rate limiting.</p>
+  <p>Each day's data comes back as a dictionary, so results get stored in a variable first and parsed from there rather than making repeat calls for the same day. Everything gets mapped into a day-by-day dictionary, then written out to CSV in the raw data folder.</p>
+  <p>Before pulling new data, the script checks whether the CSV already exists. If the CSV exists, it calculates which days are already saved and only pulls what is missing. In addition, it also pulls the two most recent days already in the file. This is necessary because if the data for "today" gets pulled in the morning, the day is then marked as complete in the CSV even though the rest of the day's readings haven't happened yet. Repulling the last two days catches those readings instead of potentially leaving gaps. New data is written to a new data frame, and the two data frames are concatenated. The CSV gets overwritten and returns the full, updated set.</p>
+  <p>The script also prints status updates as it runs and reports total run time at the end.</p>
 
   <h2>Sources</h2>
   <div class="linkrow">
-    <a href="#">Raw data — link</a>
-    <a href="#">Cleaned data — link</a>
-    <a href="#">Collection code — link</a>
+    <a href="data/raw/sam_garmin_data.csv">Raw data — link</a>
+    <a href="data/clean/cleaned_garmin_data.csv">Cleaned data — link</a>
+    <a href="garmin_pull.py">Collection code — link</a>
   </div>
 
   <h2>API Documentation</h2>
-  <div class="tk">
-  <span class="tk-label">To fill in</span>
-  <ul>
-<li>Name of API / site used.</li>
-<li>Core endpoint documentation link.</li>
-<li>Example GET request (e.g. GET https://api.example.com/v1/resource?param=value).</li>
-  </ul>
-</div>
+  <div class="linkrow">
+    <a href="https://github.com/cyberjunky/python-garminconnect" target="_blank">cyberjunky/python-garminconnect — GitHub repo</a>
+  </div>
+  <p>This project uses <code>cyberjunky/python-garminconnect</code>, a community-maintained Python client for Garmin Connect, rather than Garmin's official developer API. After authenticating with Garmin Connect credentials, individual metrics are pulled with one method call per metric, per day. For example, sleep data for a given day is retrieved with:</p>
+  <pre><code>sleep = client.get_sleep_data(day)</code></pre>
+  <p>This call returns a nested dictionary containing sleep stage durations, sleep score breakdowns, overnight HRV, and related sleep metrics for that date, which are then parsed out into individual fields.</p>
 
   <h2>Raw vs. Cleaned</h2>
   <div class="figure-grid">
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Small image of raw data, before cleaning.</figcaption>
+  <img src="images/dataprep/raw-data-sample.png" alt="Sample of raw Garmin data showing missing SpO2 values" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Raw data: SpO2 columns show missing values for the first several days, before that tracking setting was enabled.</figcaption>
 </figure>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Small image of cleaned / prepared data.</figcaption>
+  <img src="images/dataprep/cleaned-data-sample.png" alt="Sample of cleaned Garmin data with no missing values" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Cleaned data: SpO2 columns removed, hrv weekly avg backfilled — no missing values remain.</figcaption>
 </figure>
   </div>
 
+  <h2>Cleaning Process</h2>
+  <p>Two large issues were revealed when scanning for missing values. The SpO2-related columns (avg SpO2, lowest SpO2, 7-day avg SpO2, avg sleep SpO2) and the first rows of <code>hrv weekly avg</code> had blank values.</p>
+  <p>SpO2 data is missing for about the first week of collection because that tracking setting was not enabled on the watch yet. Due to this being truly missing values, the SpO2 columns were split into their own dataset rather than imputed. They were then dropped from the main working dataset. In the future, when more data is collected in this category and when other historical data is received from Elpis Alliance, re-adding the columns and removing the missing rows will be considered. In the meantime, this option preserves the SpO2 data for a future SpO2-specific dataset once more data accumulates from 9/12 onward.</p>
+  <p>The early gaps in <code>hrv weekly avg</code> are not the same problem as the missing SpO2 data. That metric is a rolling seven-day average, so it genuinely could not be calculated yet during the first few days of data collection. This data isn't truly missing; it just didn't exist yet. As such, backfilling those rows with the first real calculated weekly average was determined to be reasonable in this case, since it is not a fabricated calculation.</p>
+  <p>A separate issue was discovered while scanning for outliers. The most recent day in the dataset consistently showed unusually low values for metrics like resting and total calories, among others. This is a direct consequence of how the day is pulled. If a day's data is pulled before that day is over, metrics like calories and steps haven't finished accumulating yet. Rather than treat this as an actual low value, the most recent day is dropped from the dataset before analysis.</p>
+  <p>Remaining outliers (for example, a low REM sleep percentage on 9/5, or elevated heart rate and stress on certain nights) were reviewed individually rather than removed automatically. These reflect real recorded nights tied to known factors, such as late nights, nightly interruptions from pets or family members, or lifestyle factors like alcohol use, rather than data collection errors.</p>
+
   <h2>Exploratory Visualizations</h2>
-  <p>At least 10 required — replace each placeholder below as EDA is completed.</p>
   <div class="figure-grid">
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Visualization 1 — replace with real figure + 2-sentence description.</figcaption>
+  <img src="images/dataprep/sleep_stage_over_time_bar.png" alt="Stacked bar chart of sleep stage duration by night" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Light sleep makes up the largest share of most nights, with REM and deep sleep varying more night to night. Total sleep duration itself also swings noticeably, from under 5 hours to nearly 10.</figcaption>
 </figure>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Visualization 2</figcaption>
+  <img src="images/dataprep/hrv_over_time_line.png" alt="Line chart of overnight HRV over time" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Overnight HRV ranges from 29 to 64 ms across the tracked period, with a clear peak on 9/9 — a night with zero recorded sleep interruptions and the highest REM total. The lowest value (9/13) corresponds to a night with heavy fragmentation and minimal REM.</figcaption>
 </figure>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Visualization 3</figcaption>
+  <img src="images/dataprep/total_calories_vs_hrv_scatter.png" alt="Scatter plot of total calories versus overnight HRV" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>No clear linear relationship is visible between total daily calories burned and that night's HRV in this small sample. The highest HRV reading occurs at a moderate calorie count, not at either extreme.</figcaption>
 </figure>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Visualization 4</figcaption>
+  <img src="images/dataprep/total_steps_vs_next_night_sleep_score_scatter.png" alt="Scatter plot of total steps versus next night's sleep score" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Sleep score is shifted forward one day so each day's steps line up with the following night's sleep score. The highest step-count days tend to precede lower sleep scores, while several of the lowest step-count days precede some of the best sleep scores recorded.</figcaption>
 </figure>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Visualization 5</figcaption>
+  <img src="images/dataprep/body_battery_charged_vs_drained_bar.png" alt="Grouped bar chart of body battery charged versus drained by day" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Some days show drained clearly exceeding charged (9/4, 9/8, 9/11, 9/13), while others lean the opposite way (9/6, 9/9, 9/15, 9/16). No consistent surplus or deficit pattern appears across the full window.</figcaption>
 </figure>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Visualization 6</figcaption>
+  <img src="images/dataprep/average_respiration_rate_sleep_over_time.png" alt="Line chart of average sleep respiration rate over time" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Average sleep respiration stays fairly narrow, mostly between 15 and 17 breaths per minute, which falls within the normal range for adults. There is no clear upward or downward trend across the tracked period.</figcaption>
 </figure>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Visualization 7</figcaption>
+  <img src="images/dataprep/average_resting_heart_rate_over_time.png" alt="Line chart of average resting heart rate over time" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Resting heart rate ranges from 48 to 62 bpm across the tracked period, with no sustained upward or downward trend. The two highest points, 9/5 and 9/13, line up with the same nights already flagged for elevated stress or fragmented sleep elsewhere in this analysis.</figcaption>
 </figure>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Visualization 8</figcaption>
+  <img src="images/dataprep/sleep_score_distribution.png" alt="Histogram of overall sleep score" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Sleep scores skew toward the higher end, with most nights landing between 70 and 90. A smaller cluster of lower scores in the high 30s to high 40s pulls the low end of the distribution.</figcaption>
 </figure>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Visualization 9</figcaption>
+  <img src="images/dataprep/recovery_metrics_boxplots.png" alt="Boxplots comparing overall sleep score, average sleep stress, deep sleep percent, and REM sleep percent" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Overall sleep score shows the widest spread and sits at a higher range than the other three recovery metrics shown. Average sleep stress includes one clear outlier, corresponding to a night with known lifestyle factors affecting recovery.</figcaption>
 </figure>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Visualization 10</figcaption>
+  <img src="images/dataprep/correlation_heatmap.png" alt="Correlation heatmap of twelve key recovery and activity metrics" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>HRV and overall sleep score both correlate strongly and negatively with stress and heart rate metrics, forming a coherent recovery cluster. Deep sleep percent stands apart, showing consistently weaker correlations with every other metric in this set.</figcaption>
+</figure>
+    <figure class="figure">
+  <img src="images/dataprep/intensity_minutes_by_day.png" alt="Grouped bar chart of moderate and vigorous intensity minutes by day" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Vigorous activity dominates on most active days, while moderate-intensity minutes rarely appear except on 9/6 and 9/7. Several days show no recorded intensity minutes at all, reflecting genuine rest days rather than missing data.</figcaption>
 </figure>
   </div>
 </div>
