@@ -21,7 +21,7 @@ ax.set_ylabel("Duration (hours)")
 ax.set_xlabel("Date")
 ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
-plt.xticks(rotation = 45)
+plt.xticks(rotation = 90)
 plt.tight_layout()
 plt.savefig("../images/dataprep/sleep_stage_over_time_bar.png")
 plt.close()
