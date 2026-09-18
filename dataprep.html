@@ -142,11 +142,11 @@
   <div class="figure-grid">
     <figure class="figure">
   <img src="images/dataprep/sleep_stage_over_time_bar.png" alt="Stacked bar chart of sleep stage duration by night" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>The largest portion of most nights was classified as "Light Sleep". "REM" and "Deep Sleep" varied more night to night. Total sleep also has a wide range from under 5 hours to nearly 10.</figcaption>
+  <figcaption>The largest portion of most nights was classified as "Light Sleep." "REM" and "Deep Sleep" varied more night to night. Total sleep also has a wide range from under 5 hours to nearly 10.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/hrv_vs_next_day_stress_scatter.png" alt="Scatter plot of overnight HRV vs next-day average stress" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Data points show a general decrease in next-day stress as overnight HRV increases, however as more data is collected, this potential trend may change.</figcaption>
+  <figcaption>Data points show a general decrease in next-day stress as overnight HRV increases. However as more data is collected, this potential trend may change.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/total_calories_vs_hrv_scatter.png" alt="Scatter plot of total calories versus overnight HRV" style="width:100%; display:block; border-radius:4px;">
@@ -158,11 +158,11 @@
 </figure>
     <figure class="figure">
   <img src="images/dataprep/body_battery_charged_vs_drained_bar.png" alt="Grouped bar chart of body battery charged versus drained by day" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Some days show drained clearly exceeding charged (9/4, 9/8, 9/11, 9/13), while others go the other way (9/6, 9/9, 9/15, 9/16). This data follows the daily activity/intensity levels.</figcaption>
+  <figcaption>Some days show drained clearly exceeding charged (9/4, 9/8, 9/11, 9/13), while others go the other way (9/6, 9/9, 9/15, 9/16). This data is directly reflective of each day's activity/intensity levels.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/body_battery_drained_vs_next_night_sleep_score_scatter.png" alt="Scatter plot of body battery drained versus next night's sleep score" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Sleep score is shifted forward one day so each day's body battery drained lines up with the following night's sleep score. There appears to be a slight negative correlation between body battery drained and sleep score. The higher the loss in body battery (increased daily stress), the lower the sleep score that night.</figcaption>
+  <figcaption>Sleep score is shifted forward one day so each day's body battery (drained) lines up with the following night's sleep score. There appears to be a slight negative correlation between body battery drained and sleep score. The higher the loss in body battery (increased daily stress), the lower the sleep score that night.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/average_respiration_rate_sleep_over_time.png" alt="Scatter plot of average sleep respiration rate over time" style="width:100%; display:block; border-radius:4px;">
@@ -171,6 +171,10 @@
     <figure class="figure">
   <img src="images/dataprep/average_respiration_rate_sleep_vs_sleep_score.png" alt="Scatter plot of average sleep respiration rate versus sleep score" style="width:100%; display:block; border-radius:4px;">
   <figcaption>With the exception of one outlier in this current dataset, there appears to be a general downward slope when comparing average sleep respiration rate to overall sleep score. As average sleep respiration rate decreases, overall sleep score tends to increase.</figcaption>
+</figure>
+    <figure class="figure">
+  <img src="images/dataprep/average_sleep_stress_over_time.png" alt="Line chart of average sleep stress over time" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Average sleep stress ranges from under 10 to over 60 with no clear trend in either direction. When compared with other visualizations in this analysis, 9/13, which stands out as a night with particularly high sleep stress also shares a high respiration rate, high levels of body battery both drained and charged, and zero intensity minutes. This suggests strong correlations between all these metrics.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/average_resting_heart_rate_over_time.png" alt="Line chart of average resting heart rate over time" style="width:100%; display:block; border-radius:4px;">
@@ -186,11 +190,11 @@
 </figure>
     <figure class="figure">
   <img src="images/dataprep/correlation_heatmap.png" alt="Correlation heatmap of twelve key recovery and activity metrics" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>HRV and overall sleep score both correlate strongly and negatively with stress and heart rate metrics, forming a coherent recovery cluster. Deep sleep percent is also a standout, showing consistently weaker correlations with every other metric, indicating this sleep stage may be the most important in terms of next day recovery.</figcaption>
+  <figcaption>The metric that correlates most strongly with overall sleep score (0.90) is "total sleep duration." Although, the highest correlation from any individual sleep stage is "REM sleep seconds" at 0.83. At this stage in data collection, a counterintuitive trend has emerged: on days with an increased drainage of "body battery," "overall sleep score" and "REM sleep seconds" both tend to decrease.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/intensity_minutes_by_day.png" alt="Grouped bar chart of moderate and vigorous intensity minutes by day" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Vigorous activity dominates on most active days, while moderate-intensity minutes rarely appear except on 9/6 and 9/7. Days that show no intensity levels are representative of genuine rest days rather than missing data.</figcaption>
+  <figcaption>Vigorous activity dominates on most active days, while moderate-intensity minutes rarely appear. Days that show no intensity levels are representative of genuine rest days rather than missing data.</figcaption>
 </figure>
   </div>
 </div>
