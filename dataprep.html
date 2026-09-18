@@ -123,11 +123,11 @@
   <div class="figure-grid">
     <figure class="figure">
   <img src="images/dataprep/raw-data-sample.png" alt="Sample of raw Garmin data showing missing SpO2 values" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Raw data: SpO2 columns show missing values for the first several days, before that tracking setting was enabled.</figcaption>
+  <figcaption>Raw data: Initially tracking was not enabled for the SpO2 metric. Additionally, for the first few days, there was not enough data to calculate the HRV average.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/cleaned-data-sample.png" alt="Sample of cleaned Garmin data with no missing values" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Cleaned data: SpO2 columns removed, hrv weekly avg backfilled — no missing values remain.</figcaption>
+  <figcaption>Cleaned data: SpO2 columns were removed and HRV weekly avg was backfilled; no remaining missing values.</figcaption>
 </figure>
   </div>
 
@@ -142,27 +142,35 @@
   <div class="figure-grid">
     <figure class="figure">
   <img src="images/dataprep/sleep_stage_over_time_bar.png" alt="Stacked bar chart of sleep stage duration by night" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Light sleep makes up the largest share of most nights, with REM and deep sleep varying more night to night. Total sleep duration itself also swings noticeably, from under 5 hours to nearly 10.</figcaption>
+  <figcaption>The largest portion of most nights was classified as "Light Sleep". "REM" and "Deep Sleep" varied more night to night. Total sleep also has a wide range from under 5 hours to nearly 10.</figcaption>
 </figure>
     <figure class="figure">
-  <img src="images/dataprep/hrv_over_time_line.png" alt="Line chart of overnight HRV over time" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Overnight HRV ranges from 29 to 64 ms across the tracked period, with a clear peak on 9/9 — a night with zero recorded sleep interruptions and the highest REM total. The lowest value (9/13) corresponds to a night with heavy fragmentation and minimal REM.</figcaption>
+  <img src="images/dataprep/hrv_vs_next_day_stress_scatter.png" alt="Scatter plot of overnight HRV vs next-day average stress" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Data points show a general decrease in next-day stress as overnight HRV increases, however as more data is collected, this potential trend may change.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/total_calories_vs_hrv_scatter.png" alt="Scatter plot of total calories versus overnight HRV" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>No clear linear relationship is visible between total daily calories burned and that night's HRV in this small sample. The highest HRV reading occurs at a moderate calorie count, not at either extreme.</figcaption>
+  <figcaption>There does not appear to be any clear linear relationship between total daily calories burned and that night's HRV in the current data. The highest HRV reading occurs at a middle-level calorie count.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/total_steps_vs_next_night_sleep_score_scatter.png" alt="Scatter plot of total steps versus next night's sleep score" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Sleep score is shifted forward one day so each day's steps line up with the following night's sleep score. The highest step-count days tend to precede lower sleep scores, while several of the lowest step-count days precede some of the best sleep scores recorded.</figcaption>
+  <figcaption><em>A majority of the nights with higher sleep scores are clustered under 10,000 steps. Though there are several points that fall outside of that cluster and therefore no real trend can be inferred.</em></figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/body_battery_charged_vs_drained_bar.png" alt="Grouped bar chart of body battery charged versus drained by day" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Some days show drained clearly exceeding charged (9/4, 9/8, 9/11, 9/13), while others lean the opposite way (9/6, 9/9, 9/15, 9/16). No consistent surplus or deficit pattern appears across the full window.</figcaption>
+  <figcaption>Some days show drained clearly exceeding charged (9/4, 9/8, 9/11, 9/13), while others go the other way (9/6, 9/9, 9/15, 9/16). This data follows the daily activity/intensity levels.</figcaption>
 </figure>
     <figure class="figure">
-  <img src="images/dataprep/average_respiration_rate_sleep_over_time.png" alt="Line chart of average sleep respiration rate over time" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Average sleep respiration stays fairly narrow, mostly between 15 and 17 breaths per minute, which falls within the normal range for adults. There is no clear upward or downward trend across the tracked period.</figcaption>
+  <img src="images/dataprep/body_battery_drained_vs_next_night_sleep_score_scatter.png" alt="Scatter plot of body battery drained versus next night's sleep score" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Sleep score is shifted forward one day so each day's body battery drained lines up with the following night's sleep score. There appears to be a slight negative correlation between body battery drained and sleep score. The higher the loss in body battery (increased daily stress), the lower the sleep score that night.</figcaption>
+</figure>
+    <figure class="figure">
+  <img src="images/dataprep/average_respiration_rate_sleep_over_time.png" alt="Scatter plot of average sleep respiration rate over time" style="width:100%; display:block; border-radius:4px;">
+  <figcaption><em>A wide variety of respiration rates are observed across different nights. This is indicative of varying sleep quality and no consistent trends innately.</em></figcaption>
+</figure>
+    <figure class="figure">
+  <img src="images/dataprep/average_respiration_rate_sleep_vs_sleep_score.png" alt="Scatter plot of average sleep respiration rate versus sleep score" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>With the exception of one outlier in this current dataset, there appears to be a general downward slope when comparing average sleep respiration rate to overall sleep score. As average sleep respiration rate decreases, overall sleep score tends to increase.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/average_resting_heart_rate_over_time.png" alt="Line chart of average resting heart rate over time" style="width:100%; display:block; border-radius:4px;">
@@ -170,7 +178,7 @@
 </figure>
     <figure class="figure">
   <img src="images/dataprep/sleep_score_distribution.png" alt="Histogram of overall sleep score" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Sleep scores skew toward the higher end, with most nights landing between 70 and 90. A smaller cluster of lower scores in the high 30s to high 40s pulls the low end of the distribution.</figcaption>
+  <figcaption>Sleep scores are left skewed. Most nights land between a 70 and a 90 overall sleep score. A smaller cluster of lower sleep quality nights pull the low end of the distribution to the left.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/recovery_metrics_boxplots.png" alt="Boxplots comparing overall sleep score, average sleep stress, deep sleep percent, and REM sleep percent" style="width:100%; display:block; border-radius:4px;">
@@ -178,11 +186,11 @@
 </figure>
     <figure class="figure">
   <img src="images/dataprep/correlation_heatmap.png" alt="Correlation heatmap of twelve key recovery and activity metrics" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>HRV and overall sleep score both correlate strongly and negatively with stress and heart rate metrics, forming a coherent recovery cluster. Deep sleep percent stands apart, showing consistently weaker correlations with every other metric in this set.</figcaption>
+  <figcaption>HRV and overall sleep score both correlate strongly and negatively with stress and heart rate metrics, forming a coherent recovery cluster. Deep sleep percent is also a standout, showing consistently weaker correlations with every other metric, indicating this sleep stage may be the most important in terms of next day recovery.</figcaption>
 </figure>
     <figure class="figure">
   <img src="images/dataprep/intensity_minutes_by_day.png" alt="Grouped bar chart of moderate and vigorous intensity minutes by day" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Vigorous activity dominates on most active days, while moderate-intensity minutes rarely appear except on 9/6 and 9/7. Several days show no recorded intensity minutes at all, reflecting genuine rest days rather than missing data.</figcaption>
+  <figcaption>Vigorous activity dominates on most active days, while moderate-intensity minutes rarely appear except on 9/6 and 9/7. Days that show no intensity levels are representative of genuine rest days rather than missing data.</figcaption>
 </figure>
   </div>
 </div>

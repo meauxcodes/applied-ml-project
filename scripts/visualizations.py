@@ -27,20 +27,16 @@ plt.savefig("../images/dataprep/sleep_stage_over_time_bar.png")
 plt.close()
 
 ### Visualization #2 ###
-### Overnight HRV Over Time ###
-
-hrv_last_night_avg = clean_data["hrv last night avg"]
+### Overnight HRV vs Average Daily Stress ###
 
 fig, ax = plt.subplots()
-ax.plot(clean_data["date"], hrv_last_night_avg, label="Overnight HRV (Avg)", marker='o', color="#8A97B8")
-ax.set_title("Overnight HRV Over Time")
-ax.set_ylabel("Average HRV (ms)")
-ax.set_xlabel("Date")
-ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
+ax.scatter(clean_data["hrv last night avg"], clean_data["avg stress"], color="#9C4438")
+ax.set_title("Overnight HRV vs. Next-Day Average Stress")
+ax.set_xlabel("Overnight HRV (ms)")
+ax.set_ylabel("Next-Day Average Stress")
 
-plt.xticks(rotation = 45)
 plt.tight_layout()
-plt.savefig("../images/dataprep/hrv_over_time_line.png")
+plt.savefig("../images/dataprep/hrv_vs_next_day_stress_scatter.png")
 plt.close()
 
 
@@ -48,7 +44,7 @@ plt.close()
 ### Total Calories vs HRV (Scatterplot) ###
 
 fig, ax = plt.subplots()
-ax.scatter(clean_data["total calories"], clean_data["hrv last night avg"], label="Total Calories vs HRV", color="#8A97B8")
+ax.scatter(clean_data["total calories"], clean_data["hrv last night avg"], label="Total Calories vs HRV", color="#9C4438")
 ax.set_title("Total Calories vs Overnight HRV (Avg)")
 ax.set_ylabel("Overnight HRV (Avg)")
 ax.set_xlabel("Total Calories")
@@ -67,7 +63,6 @@ ax.scatter(clean_data["total steps"], clean_data["overall sleep score"].shift(-1
 ax.set_title("Total Steps vs Next Night Sleep Score")
 ax.set_ylabel("Next Night Sleep Score")
 ax.set_xlabel("Total Steps")
-ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
 plt.xticks(rotation = 45)
 plt.tight_layout()
@@ -88,14 +83,27 @@ plt.savefig("../images/dataprep/body_battery_charged_vs_drained_bar.png")
 plt.close()
 
 ### Visualization #6 ###
-### Average Respiration Rate (Sleep) Over Time ###
+### Body Battery Drained vs. Overall Sleep Score ###
 
 fig, ax = plt.subplots()
-ax.plot(clean_data["date"],clean_data["avg respiration (sleep)"],label="Avg Respiration Rate (Sleep)",marker = "o", color="#8A97B8")
-ax.set_title("Average Respiration Rate (Sleep) Over Time")
+ax.scatter(clean_data["body battery drained"], clean_data["overall sleep score"].shift(-1), label="Body Battery Drained vs Next Night Sleep Score", color="#1B2340")
+ax.set_title("Body Battery Drained vs Next Night Sleep Score")
+ax.set_ylabel("Next Night Sleep Score")
+ax.set_xlabel("Body Battery Drained")
+
+plt.xticks(rotation = 45)
+plt.tight_layout()
+plt.savefig("../images/dataprep/body_battery_drained_vs_next_night_sleep_score_scatter.png")
+plt.close()
+
+### Visualization #7 ###
+### Average Respiration Rate (Sleep) over Time ###
+
+fig, ax = plt.subplots()
+ax.plot(clean_data["date"],clean_data["avg respiration (sleep)"],label="Avg Respiration Rate (Sleep)",marker = "o", color="#A6841F")
+ax.set_title("Average Respiration Rate (Sleep) over Time")
 ax.set_xlabel("Date")
 ax.set_ylabel("Average Respiration Rate (Sleep)")
-ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
 plt.xticks(rotation = 90)
 plt.tight_layout()
@@ -103,11 +111,26 @@ plt.savefig("../images/dataprep/average_respiration_rate_sleep_over_time.png")
 plt.close()
 
 
-### Visualization #7 ###
+### Visualization #8 ###
+### Average Respiration Rate (Sleep) vs Overall Sleep Score ###
+
+fig, ax = plt.subplots()
+ax.scatter(clean_data["overall sleep score"],clean_data["avg respiration (sleep)"],label="Avg Respiration Rate (Sleep)",marker = "o", color="#A6841F")
+ax.set_title("Average Respiration Rate (Sleep) vs Sleep Score")
+ax.set_xlabel("Overall Sleep Score")
+ax.set_ylabel("Average Respiration Rate (Sleep)")
+
+plt.xticks(rotation = 90)
+plt.tight_layout()
+plt.savefig("../images/dataprep/average_respiration_rate_sleep_vs_sleep_score.png")
+plt.close()
+
+
+### Visualization #9 ###
 ### Average Resting Heart Rate Over Time ###
 
 fig, ax = plt.subplots()
-ax.plot(clean_data["date"],clean_data["resting heart rate (overnight)"],label="Avg Resting Heart Rate",marker = "o", color="#8A97B8")
+ax.plot(clean_data["date"],clean_data["resting heart rate (overnight)"],label="Avg Resting Heart Rate",marker = "o", color="#9C4438")
 ax.set_title("Average Resting Heart Rate Over Time")
 ax.set_xlabel("Date")
 ax.set_ylabel("Average Resting Heart Rate")
@@ -119,11 +142,11 @@ plt.savefig("../images/dataprep/average_resting_heart_rate_over_time.png")
 plt.close()
 
 
-### Visualization #8 ###
+### Visualization #10 ###
 ### Sleep Score Distribution ###
 
 fig, ax = plt.subplots()
-ax.hist(clean_data["overall sleep score"], bins=5, color="#8A97B8", alpha=0.7)
+ax.hist(clean_data["overall sleep score"], bins=5, color="#A6841F", alpha=0.7)
 ax.set_title("Sleep Score Distribution")
 ax.set_xlabel("Sleep Score")
 
@@ -132,7 +155,7 @@ plt.savefig("../images/dataprep/sleep_score_distribution.png")
 plt.close()
 
 
-### Visualization #9 ###
+### Visualization #11 ###
 ### Recovery Metric Boxplots ###
 plot_data = [
     clean_data["overall sleep score"],
@@ -153,7 +176,7 @@ plt.savefig("../images/dataprep/recovery_metrics_boxplots.png")
 plt.close()
 
 
-### Visualization #10 ###
+### Visualization #12 ###
 ### Correlation Heat Map ###
 
 # From the eda_exploration notebook:
@@ -164,7 +187,7 @@ corr_columns = [
     "avg sleep stress",
     "resting heart rate",
     "total steps",
-    "avg sleep respiration",
+    "avg respiration (sleep)",
     "body battery charged",
     "max heart rate",
     "deep sleep percent",
@@ -182,7 +205,7 @@ plt.savefig("../images/dataprep/correlation_heatmap.png")
 plt.close()
 
 
-### Visualization #11 ###
+### Visualization #13 ###
 ### Intensity Minutes by Day###
 
 fig, ax = plt.subplots()
