@@ -1,0 +1,22 @@
+column,meaning,unit
+participant_id,Anonymous code for each participant,text
+calendarDate,Date Garmin assigns to the record,date
+cohort,Generic label for the participant's program group,text
+durationInMs,"Total time asleep, not counting awake time",milliseconds
+deepSleepDurationInMs,Time in deep sleep,milliseconds
+lightSleepDurationInMs,Time in light sleep,milliseconds
+remSleepInMs,Time in REM sleep,milliseconds
+awakeDurationInMs,Time awake during the sleep period,milliseconds
+overallSleepScore,Garmin's overall rating of the night,score 0 to 100
+lastNightAvg,Average heart rate variability across the night,milliseconds
+lastNight5MinHigh,Highest 5-minute average heart rate variability in the night,milliseconds
+restingHeartRateInBeatsPerMinute,Resting heart rate for the day,beats per minute
+minHeartRateInBeatsPerMinute,Lowest heart rate recorded that day,beats per minute
+maxHeartRateInBeatsPerMinute,Highest heart rate recorded that day,beats per minute
+averageStressInStressLevel,Average Garmin stress score across the day,score 0 to 100
+maxStressInStressLevel,Highest stress score recorded that day,score 0 to 100
+steps,Total steps for the day,count
+activeKilocalories,Calories burned through activity,kilocalories
+bmrKilocalories,Calories burned at rest,kilocalories
+moderateIntensityDurationInMs,Time in moderate-intensity activity,milliseconds
+vigorousIntensityDurationInMs,Time in vigorous-intensity activity,milliseconds

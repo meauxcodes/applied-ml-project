@@ -1,2 +1,11 @@
-.env
+# cohort source data: very large and contains real participant IDs
+data/cohort_exports/
+data/cohort_stacked/
 
+# Python environment and system files
+.venv/
+__pycache__/
+.DS_Store
+
+# credentials
+.env
