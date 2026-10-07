@@ -33,11 +33,19 @@ hrv = hrv[keys + ["lastNightAvg", "lastNight5MinHigh"]]
 hrv = hrv.drop_duplicates(subset=keys, keep="last")
 print("hrv after", hrv.shape)
 
-daily = daily[keys + ["restingHeartRateInBeatsPerMinute", "minHeartRateInBeatsPerMinute",
-                      "maxHeartRateInBeatsPerMinute", "averageStressInStressLevel",
-                      "maxStressInStressLevel", "steps", "activeKilocalories", "bmrKilocalories",
-                      "moderateIntensityDurationInMs", "vigorousIntensityDurationInMs"]]
 daily = daily.drop_duplicates(subset=keys, keep="last")
+
+# heart rate lows are measured overnight, so they keep their date
+daily_night = daily[keys + ["restingHeartRateInBeatsPerMinute", "minHeartRateInBeatsPerMinute"]]
+
+# activity and stress describe the daytime, so move them forward one date.
+# that lines each day up with the night that followed it
+daily_before = daily[keys + ["maxHeartRateInBeatsPerMinute", "averageStressInStressLevel",
+                             "maxStressInStressLevel", "steps", "activeKilocalories",
+                             "bmrKilocalories", "moderateIntensityDurationInMs",
+                             "vigorousIntensityDurationInMs"]].copy()
+next_date = pd.to_datetime(daily_before["calendarDate"]) + pd.Timedelta(days=1)
+daily_before["calendarDate"] = next_date.dt.strftime("%Y-%m-%d")
 print("daily after", daily.shape)
 
 
@@ -47,7 +55,8 @@ print("daily after", daily.shape)
 merged = sleep.merge(hrv, on=keys, how="inner")
 print("sleep + hrv", merged.shape)
 
-merged = merged.merge(daily, on=keys, how="inner")
+merged = merged.merge(daily_night, on=keys, how="inner")
+merged = merged.merge(daily_before, on=keys, how="inner")
 print("sleep + hrv + daily", merged.shape)
 
 print(merged.head())

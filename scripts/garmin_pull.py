@@ -25,6 +25,7 @@ client.login("~/.garminconnect")
 print("...session created")
 
 
+
 ### This below function takes the current date, and builds a list of all dates 
 ### from September 4th, 2026 (when I started wearing my Garmin), until the 
 ### current date. 
