@@ -8,6 +8,10 @@ lightSleepDurationInMs,Time in light sleep,milliseconds
 remSleepInMs,Time in REM sleep,milliseconds
 awakeDurationInMs,Time awake during the sleep period,milliseconds
 overallSleepScore,Garmin's overall rating of the night,score 0 to 100
+breathsPerMinute_mean,Average breating rate during sleep,breaths per minute
+breathsPerMinute_std,How much breathing varied during sleep,breaths per minute
+breathsPerMinute_min,Lowest breating rate during sleep,breaths per minute
+breathsPerMinute_max,Highest breating rate during sleep,breaths per minute
 lastNightAvg,Average heart rate variability across the night,milliseconds
 lastNight5MinHigh,Highest 5-minute average heart rate variability in the night,milliseconds
 restingHeartRateInBeatsPerMinute,Resting heart rate for the day,beats per minute

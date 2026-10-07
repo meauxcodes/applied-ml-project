@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SVM — Eventide</title>
+<title>Gradient Boosting — Eventide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,620&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -26,15 +26,18 @@
       <a class="rail-item" href="index.html"><span class="n">01</span><span class="t">Introduction</span></a>
       <a class="rail-item" href="dataprep.html"><span class="n">02</span><span class="t">DataPrep_EDA</span></a>
       <a class="rail-item" href="clustering.html"><span class="n">03</span><span class="t">Clustering</span></a>
-      <a class="rail-item" href="pca.html"><span class="n">04</span><span class="t">PCA (PCA)</span></a>
+      <a class="rail-item" href="pca.html"><span class="n">04</span><span class="t">PCA</span></a>
       <a class="rail-item" href="naivebayes.html"><span class="n">05</span><span class="t">NaiveBayes</span></a>
       <a class="rail-item" href="dectrees.html"><span class="n">06</span><span class="t">DecTrees</span></a>
-      <a class="rail-item active" href="svms.html"><span class="n">07</span><span class="t">SVMs</span></a>
-      <a class="rail-item" href="regression.html"><span class="n">08</span><span class="t">Regression</span></a>
-      <a class="rail-item" href="nn.html"><span class="n">09</span><span class="t">NN</span></a>
-      <a class="rail-item" href="conclusions.html"><span class="n">10</span><span class="t">Conclusions</span></a>
+      <a class="rail-item" href="regression.html"><span class="n">07</span><span class="t">Regression</span></a>
+      <a class="rail-item" href="adaboost.html"><span class="n">08</span><span class="t">AdaBoost</span></a>
+      <a class="rail-item active" href="gradientboosting.html"><span class="n">09</span><span class="t">GradientBoosting</span></a>
+      <a class="rail-item" href="xgboost.html"><span class="n">10</span><span class="t">XGBoost</span></a>
+      <a class="rail-item" href="conclusions.html"><span class="n">11</span><span class="t">Conclusions</span></a>
   </nav>
 </div>
+
+<script>(function(){var w=document.querySelector(".rail-wrap");var a=w&&w.querySelector(".active");if(a){w.scrollLeft=a.offsetLeft-(w.clientWidth-a.offsetWidth)/2;}})();</script>
 
 <div class="wave-strip">
   <span class="wave-label">Signal &middot; illustrative, not real recorded data</span>
@@ -43,40 +46,40 @@
 
 
 <section class="hero">
-  <div class="eyebrow">07 / SVM</div>
-  <h1>Support Vector Machines</h1>
-  <p class="sub">Margin-based classification across multiple kernels.</p>
+  <div class="eyebrow">09 / Gradient Boosting</div>
+  <h1>Gradient Boosting</h1>
+  <p class="sub">Sequential trees that each correct the errors of the last.</p>
 </section>
 
 <main class="shell">
 
 <div class="prose">
   <div class="tk">
-  <span class="tk-label">To fill in — Module 4</span>
+  <span class="tk-label">To fill in — Module 5</span>
   <ul>
-<li>This tab is not covered until Module 4. Leave as a stub until then.</li>
+<li>This tab is not covered until Module 5. Leave as a stub until then.</li>
   </ul>
 </div>
 
   <div class="method-section">
     <span class="tag">Overview</span>
-    <p>Short, non-technical-adjacent explanation of SVMs: how it works conceptually, and what it will be used for with respect to the topic and data.</p>
+    <p>Short, non-technical-adjacent explanation of Gradient Boosting: how it works conceptually, and what it will be used for with respect to the topic and data.</p>
     <figure class="figure">
   <div class="ph">[ image placeholder ]</div>
-  <figcaption>Diagram or illustration supporting the SVMs overview.</figcaption>
+  <figcaption>Diagram or illustration supporting the Gradient Boosting overview.</figcaption>
 </figure>
   </div>
 
   <div class="method-section">
     <span class="tag">Data</span>
-    <p>Small image of the prepared dataset(s) used specifically for SVMs, plus links to both the raw and cleaned data.</p>
+    <p>Small image of the prepared dataset(s) used specifically for Gradient Boosting, plus links to both the raw and cleaned data.</p>
     <div class="linkrow">
       <a href="#">Raw data — link</a>
       <a href="#">Cleaned data — link</a>
     </div>
     <figure class="figure">
   <div class="ph">[ image placeholder ]</div>
-  <figcaption>Prepared data sample used for SVMs.</figcaption>
+  <figcaption>Prepared data sample used for Gradient Boosting.</figcaption>
 </figure>
   </div>
 
@@ -84,7 +87,7 @@
     <span class="tag">Code</span>
     <p>Language and core packages used — link to the code itself. Do not paste code directly onto the page.</p>
     <div class="linkrow">
-      <a href="#">SVMs code — link</a>
+      <a href="#">Gradient Boosting code — link</a>
     </div>
   </div>
 
@@ -93,7 +96,7 @@
     <p>Discussion, description, and visualization of results, parameter choices, and what the results mean with respect to the topic.</p>
     <figure class="figure">
   <div class="ph">[ image placeholder ]</div>
-  <figcaption>Primary results visualization for SVMs.</figcaption>
+  <figcaption>Primary results visualization for Gradient Boosting.</figcaption>
 </figure>
   </div>
 </div>

@@ -12,13 +12,16 @@ cohort_labels = {
     "Sleep Savant Since Jun 29": "cohort_08",
 }
 
-stacked_dir = Path("/Volumes/ROG Strix/eventide_data/cohort_stacked")
+stacked_dir = Path("/Volumes/ROG Strix/eventide_data/cohort_stacked/pulse_ox")
 
 sleep = pd.read_csv(stacked_dir / "garmin-connect-sleep-summary.csv")
 print("sleep", sleep.shape)
 
 nightly_respiration = pd.read_csv(stacked_dir / "sleep_respiration.csv")
 print("sleep respiration", nightly_respiration.shape)
+
+sleep_pulse_ox = pd.read_csv(stacked_dir / "sleep_pulse_ox.csv")
+print("sleep pulse ox", sleep_pulse_ox.shape)
 
 hrv = pd.read_csv(stacked_dir / "garmin-connect-hrv-summary.csv")
 print("hrv", hrv.shape)
@@ -35,6 +38,8 @@ print("sleep after", sleep.shape)
 
 nightly_respiration = nightly_respiration[night_keys + ["breathsPerMinute_mean","breathsPerMinute_std", "breathsPerMinute_min", "breathsPerMinute_max"]]
 
+sleep_pulse_ox = sleep_pulse_ox[night_keys + ["spo2_mean", "spo2_std", "spo2_min", "spo2_max", "spo2_count"]]
+
 hrv = hrv[keys + ["lastNightAvg", "lastNight5MinHigh"]]
 hrv = hrv.drop_duplicates(subset=keys, keep="last")
 print("hrv after", hrv.shape)
@@ -43,7 +48,6 @@ daily = daily.drop_duplicates(subset=keys, keep="last")
 
 # heart rate lows are measured overnight, so they keep their date
 daily_night = daily[keys + ["restingHeartRateInBeatsPerMinute", "minHeartRateInBeatsPerMinute"]]
-
 # activity and stress describe the daytime, so move them forward one date.
 # that lines each day up with the night that followed it
 daily_before = daily[keys + ["maxHeartRateInBeatsPerMinute", "averageStressInStressLevel",
@@ -61,12 +65,17 @@ print("daily after", daily.shape)
 merged = sleep.merge(nightly_respiration, on=night_keys, how="inner")
 print("sleep + nightly respiration", merged.shape)
 
+merged = merged.merge(sleep_pulse_ox, on = night_keys, how = "inner")
+print("sleep + nightly respiration + sleep pulse ox")
+
 merged = merged.merge(hrv, on=keys, how="inner")
-print("sleep + nightly respiration + hrv", merged.shape)
+print("sleep + nightly respiration + sleep pulse ox + hrv", merged.shape)
+
+
 
 merged = merged.merge(daily_night, on=keys, how="inner")
 merged = merged.merge(daily_before, on=keys, how="inner")
-print("sleep + nightly respiration + hrv + daily", merged.shape)
+print("sleep + nightly respiration + sleep pulse ox + hrv + daily", merged.shape)
 
 merged = merged.drop(columns = ["sleepSummaryId"])
 
@@ -88,7 +97,7 @@ merged["participant_id"] = merged["participant_id"].replace(id_lookup)
 merged["cohort"] = merged["cohort"].str.strip().replace(cohort_labels)
 
 
-merged.to_csv("../data/raw/cohort_joined.csv", index=False)
+merged.to_csv("../../data/raw/pulse_ox_joined.csv", index=False)
 print(merged.head())
 print(merged.shape)
 print("saved")

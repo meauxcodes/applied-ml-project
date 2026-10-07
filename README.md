@@ -9,11 +9,16 @@ Module 1 Project Part 1 assignment already in place:
 - `pca.html` — PCA
 - `naivebayes.html` — Naive Bayes
 - `dectrees.html` — Decision Trees
-- `svms.html` — SVM
 - `regression.html` — Regression
-- `nn.html` — Neural Networks
+- `adaboost.html` — AdaBoost
+- `gradientboosting.html` — Gradient Boosting
+- `xgboost.html` — XGBoost
 - `conclusions.html` — Conclusions
 - `about.html` — About Me (the one page allowed to be written in first person)
+
+The second half of the course was restructured (SVMs and Neural Networks were removed in
+favor of Regression, AdaBoost, Gradient Boosting, and XGBoost), so there is no `svms.html`
+or `nn.html` anymore.
 
 Every page shares `style.css` and the same navigation rail across the top, so the
 site reads as one connected project rather than separate pages.

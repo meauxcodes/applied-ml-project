@@ -69,6 +69,10 @@ data_dictionary = {
     "bmrKilocalories": ["Calories burned at rest", "kilocalories"],
     "moderateIntensityDurationInMs": ["Time in moderate-intensity activity", "milliseconds"],
     "vigorousIntensityDurationInMs": ["Time in vigorous-intensity activity", "milliseconds"],
+    "breathsPerMinute_mean": ["Average breating rate during sleep","breaths per minute"],
+    "breathsPerMinute_std": ["How much breathing varied during sleep","breaths per minute"],
+    "breathsPerMinute_min": ["Lowest breating rate during sleep","breaths per minute"],
+    "breathsPerMinute_max": ["Highest breating rate during sleep","breaths per minute"],
 }
 
 # build one row per column in the cleaned table
