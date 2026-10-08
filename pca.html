@@ -149,16 +149,71 @@
     <h3>What the components represent</h3>
     <p>A loading with a magnitude above about 0.21 (one divided by the square root of 22) was treated as larger than an average contribution. Each component is a pattern in the data, not a diagnosis.</p>
     <p><strong>PC1 (26.7% of the variance): strain versus recovery.</strong> Resting heart rate, minimum heart rate, the three breathing rates (mean, maximum, and minimum), active kilocalories, and average stress load positive. Both heart rate variability measures (lastNightAvg and lastNight5MinHigh) and the overall sleep score load negative.</p>
+    <div style="overflow-x:auto; margin:1em 0;">
+      <table style="border-collapse:collapse; width:100%; max-width:640px;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Strain side (positive loadings)</th>
+            <th style="text-align:left; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Recovery side (negative loadings)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Resting heart rate (0.35)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">HRV, nightly average (-0.31)</td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Minimum heart rate (0.32)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">HRV, 5-minute high (-0.29)</td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Breathing rate, mean (0.29)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Overall sleep score (-0.27)</td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Active kilocalories (0.28)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Average stress (0.26)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Breathing rate, max (0.26)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Breathing rate, min (0.22)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+        </tbody>
+      </table>
+    </div>
     <figure class="figure">
       <img src="images/pca/pc1_loadings.png" alt="Bar chart of PC1 loadings for every feature, sorted by magnitude" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
       <figcaption>PC1 loadings, sorted by magnitude.</figcaption>
     </figure>
     <p><strong>PC2 (13.5%): daytime activity versus sleep length and breathing rate.</strong> Steps, maximum heart rate, active kilocalories, vigorous and moderate intensity time, and maximum stress load positive. Mean and maximum breathing rate, total sleep duration, and REM sleep load negative, with duration and REM only just past the cutoff.</p>
+    <div style="overflow-x:auto; margin:1em 0;">
+      <table style="border-collapse:collapse; width:100%; max-width:640px;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Daytime activity (positive loadings)</th>
+            <th style="text-align:left; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Sleep length and breathing rate (negative loadings)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Steps (0.35)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Breathing rate, mean (-0.26)</td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Maximum heart rate (0.34)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Breathing rate, max (-0.24)</td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Active kilocalories (0.31)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Total sleep duration (-0.21)</td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Vigorous intensity time (0.30)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">REM sleep (-0.21)</td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Maximum stress (0.29)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Moderate intensity time (0.22)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+        </tbody>
+      </table>
+    </div>
     <figure class="figure">
       <img src="images/pca/pc2_loadings.png" alt="Bar chart of PC2 loadings for every feature, sorted by magnitude" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
       <figcaption>PC2 loadings, sorted by magnitude.</figcaption>
     </figure>
     <p><strong>PC3 (10.8%): sleep duration.</strong> Total sleep duration, light sleep, REM sleep, and the overall sleep score carry the largest loadings, with maximum heart rate and vigorous intensity time only just past the cutoff. Deep sleep and awake time barely load, which is why this component is better described by the amount of sleep than by its quality.</p>
+    <div style="overflow-x:auto; margin:1em 0;">
+      <table style="border-collapse:collapse; width:100%; max-width:640px;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Sleep duration (positive loadings)</th>
+            <th style="text-align:left; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Negative loadings</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Total sleep duration (0.56)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">None past the cutoff</td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Light sleep (0.45)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">REM sleep (0.40)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Overall sleep score (0.34)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Maximum heart rate (0.23)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+          <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Vigorous intensity time (0.23)</td><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+        </tbody>
+      </table>
+    </div>
     <figure class="figure">
       <img src="images/pca/pc3_loadings.png" alt="Bar chart of PC3 loadings for every feature, sorted by magnitude" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
       <figcaption>PC3 loadings, sorted by magnitude.</figcaption>
@@ -167,7 +222,8 @@
 
   <div class="method-section">
     <span class="tag">Conclusions</span>
-    <p>What was learned from PCA that pertains to the topic.</p>
+    <p>Looking at the scree plot, the top three principal components account for about 51% of the variance. They show patterns between daily activities and that night's sleep metrics. PC1 identifies a "strain versus recovery" pattern in which strain-side measures rise together (active kCals, average stress, resting and minimum heart rate, breaths per minute) while recovery measures fall (HRV, overall sleep score). PC2 identifies a "daytime activity versus sleep length and breathing rate" pattern in which more daytime activity (steps, max heart rate, active kCals, max stress, moderate and vigorous activity) tends to occur together with shorter sleep and lower breathing rates (mean and max breaths per minute, total sleep duration, REM duration). PC3 identifies a "sleep duration" pattern, with total sleep, light sleep, REM sleep, and the overall sleep score rising together, and max heart rate and vigorous intensity only slightly. Based on the scree plot, 9 principal components would be kept, as that surpasses the 80% threshold. The last 13 components contribute on average only about 1.4% explained variance each, so dropping them simplifies the model while possibly eliminating additional noise.</p>
+    <p>When looking at the K=2 clustering scatter plot, K-means split the data close to the middle, near where PC1 = 0. Since PC1 describes almost twice as much variance as PC2, it makes sense that the biggest difference between nights would be found along PC1. K-means backs up this notion by cutting in that direction as well. When comparing against the loading plot for PC1, that split describes strain versus recovery.</p>
   </div>
 </div>
 
