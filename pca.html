@@ -7,6 +7,52 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,620&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+  .figure img { cursor: pointer; transition: opacity 0.15s; }
+  .figure img:hover { opacity: 0.85; }
+  #lightbox-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    cursor: zoom-out;
+  }
+  #lightbox-overlay.open { display: flex; }
+  #lightbox-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: default;
+  }
+  #lightbox-content img {
+    max-width: 100%;
+    max-height: 75vh;
+    border-radius: 4px;
+    cursor: default;
+  }
+  #lightbox-caption {
+    color: #EDEFF5;
+    margin-top: 14px;
+    text-align: center;
+    max-width: 700px;
+    font-size: 0.95em;
+  }
+  #lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 28px;
+    color: #EDEFF5;
+    font-size: 2em;
+    cursor: pointer;
+    line-height: 1;
+  }
+</style>
 </head>
 <body>
 
@@ -54,50 +100,69 @@
 <main class="shell">
 
 <div class="prose">
-  <div class="tk">
-  <span class="tk-label">To fill in — Module 2</span>
-  <ul>
-<li>This tab is not covered until Module 2. Leave as a stub until then.</li>
-  </ul>
-</div>
 
   <div class="method-section">
     <span class="tag">Overview</span>
-    <p>Short, non-technical-adjacent explanation of PCA: how it works conceptually, and what it will be used for with respect to the topic and data.</p>
+    <p>PCA is the process of reducing dimensions in a data set. It builds new axes, called principal components, as weighted combinations of the original columns, and correlated columns tend to share a component. PCA accomplishes this by combining highly correlated variables to produce vectors (eigenvectors) that explain the width and direction of stretch of the data. The eigenvalue of each one, taken from the covariance matrix of the data, is the amount of variance along that vector, and the components are ordered from largest to smallest. Loadings are the weights in each eigenvector. When they are multiplied against the standardized data matrix, the output is the scores. These are essentially a projection of each data point onto that principal component; that direction.</p>
+    <p>Dimensionality reduction means keeping only the first few principal components, the ones carrying the most variance, and discarding the rest. More data muddies the waters, so PCA looks to throw away what can afford to be thrown away to make the picture clearer. Each kept component is still built from all of the original columns. This simplifies the analysis and makes it possible to visualize the data in two or three dimensions.</p>
+    <p>The challenges of having 22 columns in this dataset are that only two or three dimensions can be drawn on a screen, redundant and noisy columns add to every distance calculation, and as more columns are added to the data matrix, the distances between points and their meaning become less informative. It is harder to make sense of the data. This follows the concept of the curse of dimensionality.</p>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Diagram or illustration supporting the PCA overview.</figcaption>
-</figure>
+      <img src="images/pca/scree_plot.png" alt="Scree plot showing the share of variance for each of the 22 principal components with a cumulative line" style="width:100%; max-width:560px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>Scree plot: the share of variance carried by each principal component (bars) and the running total (line).</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="images/pca/pc1_loadings.png" alt="Bar chart of PC1 loadings for every feature, sorted by magnitude" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>The loadings of PC1, sorted by magnitude. Each bar is the weight a feature carries in the component.</figcaption>
+    </figure>
   </div>
 
   <div class="method-section">
     <span class="tag">Data Prep</span>
-    <p>Small image of the prepared dataset(s) used specifically for PCA, plus links to both the raw and cleaned data.</p>
-    <div class="linkrow">
-      <a href="#">Raw data — link</a>
-      <a href="#">Cleaned data — link</a>
-    </div>
+    <p>Using the same primary dataset as during clustering, the data was read in and scaled using StandardScaler. The identifier columns (participant, date, cohort) were left out, so only numeric columns were used. Unlike clustering, however, all 22 numeric columns were kept and analyzed, due to the primary purpose of PCA. K-means is distance based and therefore every feature gets a say in the sum of squared distance. Correlated pairs get counted twice. However, in PCA, the algorithm looks to find shared variation among columns and consolidates correlated features onto the same component. A sample of the standardized table is shown below, and the full table is linked.</p>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Prepared data sample used for PCA.</figcaption>
-</figure>
+      <img src="images/pca/pca_scaled_sample.png" alt="Sample of the standardized 22-column table used for PCA (first 11 columns shown)" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>Sample of the standardized data used for PCA (first 11 of the 22 columns).</figcaption>
+    </figure>
+    <div class="linkrow">
+      <a href="data/clean/cohort_cleaned.csv">Cleaned cohort data — link</a>
+      <a href="data/clean/pca/pca_scaled_data.csv">Standardized PCA data — link</a>
+    </div>
   </div>
 
   <div class="method-section">
     <span class="tag">Code</span>
-    <p>Language and core packages used — link to the code itself. Do not paste code directly onto the page.</p>
+    <p>PCA was carried out in Python, using pandas and NumPy for the data and the linear algebra check, scikit-learn for standardization and PCA, and Matplotlib for the plots.</p>
     <div class="linkrow">
-      <a href="#">PCA code — link</a>
+      <a href="scripts/cohort_pca.ipynb">PCA code (notebook) — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project" target="_blank">Full project repository — link</a>
     </div>
   </div>
 
   <div class="method-section">
     <span class="tag">Results</span>
-    <p>Discussion, description, and visualization of results, parameter choices, and what the results mean with respect to the topic.</p>
+
+    <h3>How many components to keep</h3>
+    <p>The scree plot levels off around PC5, and the first five components together carry about 65% of the variance. Nine components were chosen, the point where the cumulative curve crosses 80%. That keeps most of the variance (about 82%) while cutting the number of components from 22 to 9. The 13 components that remain average about 1.4% of the variance each, which does not add much to the overall picture, and may be noise. Reaching 95% would take 15 components.</p>
+    <p>Processing the scaled dataset with SVD and comparing those values with the eigenvalues of its covariance matrix revealed identical variance and eigenvalues. This confirms that the dataset was properly centered prior to modeling.</p>
+    <p>The last component carries almost no variance (about 0.01%). The column durationInMs is the sum of the deep, light, and REM sleep columns, so those four columns hold only three independent pieces of information, and PCA found that redundancy on its own.</p>
+
+    <h3>What the components represent</h3>
+    <p>A loading with a magnitude above about 0.21 (one divided by the square root of 22) was treated as larger than an average contribution. Each component is a pattern in the data, not a diagnosis.</p>
+    <p><strong>PC1 (26.7% of the variance): strain versus recovery.</strong> Resting heart rate, minimum heart rate, the three breathing rates (mean, maximum, and minimum), active kilocalories, and average stress load positive. Both heart rate variability measures (lastNightAvg and lastNight5MinHigh) and the overall sleep score load negative.</p>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Primary results visualization for PCA.</figcaption>
-</figure>
+      <img src="images/pca/pc1_loadings.png" alt="Bar chart of PC1 loadings for every feature, sorted by magnitude" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>PC1 loadings, sorted by magnitude.</figcaption>
+    </figure>
+    <p><strong>PC2 (13.5%): daytime activity versus sleep length and breathing rate.</strong> Steps, maximum heart rate, active kilocalories, vigorous and moderate intensity time, and maximum stress load positive. Mean and maximum breathing rate, total sleep duration, and REM sleep load negative, with duration and REM only just past the cutoff.</p>
+    <figure class="figure">
+      <img src="images/pca/pc2_loadings.png" alt="Bar chart of PC2 loadings for every feature, sorted by magnitude" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>PC2 loadings, sorted by magnitude.</figcaption>
+    </figure>
+    <p><strong>PC3 (10.8%): sleep duration.</strong> Total sleep duration, light sleep, REM sleep, and the overall sleep score carry the largest loadings, with maximum heart rate and vigorous intensity time only just past the cutoff. Deep sleep and awake time barely load, which is why this component is better described by the amount of sleep than by its quality.</p>
+    <figure class="figure">
+      <img src="images/pca/pc3_loadings.png" alt="Bar chart of PC3 loadings for every feature, sorted by magnitude" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>PC3 loadings, sorted by magnitude.</figcaption>
+    </figure>
   </div>
 
   <div class="method-section">
@@ -188,6 +253,33 @@
 
   frame();
 })();
+
+function openLightbox(imgEl) {
+  var figure = imgEl.closest('figure');
+  var caption = figure ? figure.querySelector('figcaption') : null;
+  document.getElementById('lightbox-img').src = imgEl.src;
+  document.getElementById('lightbox-img').alt = imgEl.alt;
+  document.getElementById('lightbox-caption').textContent = caption ? caption.textContent : '';
+  document.getElementById('lightbox-overlay').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox-overlay').classList.remove('open');
+}
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeLightbox();
+});
+document.querySelectorAll('.figure img').forEach(function(img){
+  img.addEventListener('click', function(){ openLightbox(img); });
+});
 </script>
+<div id="lightbox-overlay" onclick="closeLightbox()">
+  <span id="lightbox-close">&times;</span>
+  <div id="lightbox-content" onclick="event.stopPropagation()">
+    <img id="lightbox-img" src="" alt="">
+    <p id="lightbox-caption"></p>
+  </div>
+</div>
+
+
 </body>
 </html>
