@@ -54,55 +54,104 @@
 <main class="shell">
 
 <div class="prose">
-  <div class="tk">
-  <span class="tk-label">To fill in — Module 2</span>
-  <ul>
-<li>This tab is not covered until Module 2. Leave as a stub until then.</li>
-  </ul>
-</div>
 
   <div class="method-section">
     <span class="tag">Overview</span>
-    <p>Short, non-technical-adjacent explanation of Clustering: how it works conceptually, and what it will be used for with respect to the topic and data.</p>
+    <p>Clustering is the method in which each observation (here, each night) is plotted on a graph. The graph is analyzed and groupings of observations, called clusters, are delineated. Once every data point is labeled as belonging to a specific cluster, the features of the observations belonging to each cluster are analyzed and the most prominent features are pulled out to determine a descriptor or hypothesis for that cluster.</p>
+    <p>There are two main types of clustering. Partition-based methods, like K-means, set the number of groups (K) before the algorithm is run and sort each observation into one of those groups. There are multiple ways to determine the clusters, but a big one is Euclidean distance. With K-means, utilizing Euclidean distance, the goal is to minimize the total squared distance between each observation and that cluster's center, a value known as the Within Cluster Sum of Squares (WCSS). Since K has to be determined before the algorithm is run, there are two common methods to determine that value. An elbow plot graphs the WCSS against each K-value, and the optimal K is found where the curve sharply levels off. In the silhouette method, each observation is compared between its current cluster (A) and the next closest cluster (B). The average distance to the observations in each cluster is calculated, and the difference (B minus A) is divided by the larger of the two average distances. This ensures that the score is between the values of -1 and 1. A positive score indicates the observation sits closer to its own cluster than to its neighbor, and a negative score indicates a likely misclassification.</p>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Diagram or illustration supporting the Clustering overview.</figcaption>
-</figure>
+      <img src="images/clustering/elbow.png" alt="Elbow plot of within-cluster sum of squares against K from 1 to 10 for the cohort nights, with no sharp bend" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>Elbow plot for the cohort nights: WCSS against K, from 1 to 10. The curve falls steadily and no sharp bend is visible.</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="images/clustering/silhouette.png" alt="Silhouette score against K from 2 to 10 for the cohort nights, highest at K equals 2" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>Silhouette score for K from 2 to 10. The score is highest at K = 2 (about 0.18) and declines from there.</figcaption>
+    </figure>
+    <p>Unlike K-means clustering, hierarchical clustering does not set the number of bins or groups in advance. Each observation starts as its own group, and the two closest groups are merged, one merge at a time, until only one group remains. A tree-like structure called a dendrogram is formed as a visual representation of how each group merges with the next. The height of each merge is the overall distance between the groups. A common rule of thumb is to draw a line, or cut, across the vertical lines that are the largest in length to determine the best number of groups. Each vertical line that is "cut" is representative of one group. For the hierarchical clustering in this project, average linkage was used with cosine distance. With average linkage, the distance between two clusters is the average of the distances between every point in one cluster and every point in the other. Cosine distance is calculated using the angle between two vectors rather than the absolute distance between them.</p>
   </div>
 
   <div class="method-section">
     <span class="tag">Data Prep</span>
-    <p>Small image of the prepared dataset(s) used specifically for Clustering, plus links to both the raw and cleaned data.</p>
-    <div class="linkrow">
-      <a href="#">Raw data — link</a>
-      <a href="#">Cleaned data — link</a>
-    </div>
+    <p>Before clustering, every pair of columns with a correlation above 0.75 was identified, and one column from each pair was removed (durationInMs, breathsPerMinute_max, lastNight5MinHigh, and minHeartRateInBeatsPerMinute). When nearly redundant information exists, the distance calculation is counting that near-duplicate information twice. This effectively pulls the clusters toward it. Removing one column from each pair of highly-correlated features keeps any single signal from being overrepresented.</p>
+    <p>All 18 remaining columns were standardized, because the features are measured in different units. If standardization did not occur, the features with large numbers, like sleep in milliseconds, would absolutely skew the distance calculations. Conversely, features with small numbers, like breaths per minute, would be wildly underrepresented. Standardization takes each column and rescales it so that its mean is centered at zero and its standard deviation is one. This allows every feature to have equal representation during clustering.</p>
+    <p>For the hierarchical clustering, all observations were grouped by their participant id. Averages were taken for each feature and one row was produced per person (98 rows). These values were standardized again before the dendrogram was created. This was necessary for visualization purposes as a dendrogram with one leaf per night (18,728 leaves) would be unreadable. This method also helps switch the underlying question from "what types of nights exist?" to "what types of people exist?"</p>
+    <p>The data fed into the clustering is completely numeric and bears no classification labels. The identifier columns (participant, date, cohort) were left out, partly because K-means can't process them, but also so that the algorithm can only see the standardized features and not the answer key. The cluster labels are produced by the algorithm, not given to it, and are then attached to the table afterward so the groups can be analyzed. A sample of the standardized table is shown below, and the full table is linked.</p>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Prepared data sample used for Clustering.</figcaption>
-</figure>
+      <img src="images/clustering/cohort_scaled_sample.png" alt="Sample of the standardized cohort table used for clustering: numeric columns only, with no identifier columns" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>Sample of the standardized data used for clustering (first seven of the 18 features). The numbers in the left column are row positions.</figcaption>
+    </figure>
+    <div class="linkrow">
+      <a href="data/clean/cohort_data.csv">Cleaned cohort data — link</a>
+      <a href="data/clean/clustering/scaled_data.csv">Standardized clustering data — link</a>
+    </div>
   </div>
 
   <div class="method-section">
     <span class="tag">Code</span>
-    <p>Language and core packages used — link to the code itself. Do not paste code directly onto the page.</p>
+    <p>The clustering was carried out in Python, using pandas and NumPy for the data, scikit-learn for K-means, standardization, and silhouette scores, SciPy for the hierarchical clustering and the matching of groups between methods, and Matplotlib and seaborn for the plots.</p>
     <div class="linkrow">
-      <a href="#">Clustering code — link</a>
+      <a href="scripts/cohort_clustering.ipynb">Clustering code (notebook) — link</a>
+      <a href="scripts/cohort_cleaning.py">Cleaning code — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project" target="_blank">Full project repository — link</a>
     </div>
   </div>
 
   <div class="method-section">
     <span class="tag">Results</span>
-    <p>Discussion, description, and visualization of results, parameter choices, and what the results mean with respect to the topic.</p>
+
+    <h3>K-means on the nights</h3>
+    <p>K-means was run for a range of K-values, keeping the best of ten starts at each K. It was difficult to determine an elbow, as the curve in the elbow plot falls steadily with no sharp bend.</p>
+    <p>The silhouette score plot showed the highest value at K=2, dropped to almost half the size for K=3 and K=4 and continued to trend overall downward up to K=10. With so many scores close to zero, there appears to be a heavy overlap in the observations, evidenced by the scatterplots. Indeed, the observations make one continuous spread rather than distinct groups. The elbow plot is also in agreement, showing no clear bend. K=2 is technically the best but it is not convincing.</p>
     <figure class="figure">
-  <div class="ph">[ image placeholder ]</div>
-  <figcaption>Primary results visualization for Clustering.</figcaption>
-</figure>
+      <img src="images/clustering/silhouette.png" alt="Silhouette score against K from 2 to 10 for the cohort nights" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>Silhouette scores for K = 2 through 10. Scores near zero indicate heavily overlapping clusters.</figcaption>
+    </figure>
+    <p>In the K=2 plot, the clusters are separated by a straight dividing line that appears to be very close to the center of the continuous cloud. There is no visible gap in these groupings. The K=3 plot is the same cloud of data but now there is a third partition that looks nearly perpendicular to the first line. The K=4 plot is interesting because it labels a fourth cluster that almost looks like it is on top of the first three clusters. This overlap is likely a result of flattening 18 dimensions onto two, since the clusters were formed using all 18 features, and the separation may exist along directions not shown in this view.</p>
+    <figure class="figure">
+      <img src="images/clustering/kmeans_k2.png" alt="Nights plotted on the first two principal components, colored by K-means cluster for K equals 2" style="width:100%; max-width:560px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>K = 2: the two clusters meet along a straight line near the center of one continuous cloud of nights. (PCA is used here only to draw the 18 features on a flat plot.)</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="images/clustering/kmeans_k3.png" alt="Nights plotted on the first two principal components, colored by K-means cluster for K equals 3" style="width:100%; max-width:560px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>K = 3: a third partition appears, nearly perpendicular to the first.</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="images/clustering/kmeans_k4.png" alt="Nights plotted on the first two principal components, colored by K-means cluster for K equals 4" style="width:100%; max-width:560px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>K = 4: a fourth cluster appears to sit on top of the other three, likely because 18 dimensions are flattened onto two.</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="images/clustering/parallel_plots.png" alt="Parallel plot of the two K-means cluster centers across the 18 standardized features" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>Cluster centers for K = 2, across the 18 standardized features. Cluster 1 (red, 5,880 nights) is higher in resting and max heart rate, stress, active calories, activity time, and breathing rate, and lower in HRV, REM sleep, and sleep score. Cluster 0 (blue, 12,848 nights) shows the opposite pattern.</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="images/clustering/participant_share_k2.png" alt="Histogram of the share of nights per participant falling in K-means cluster 1" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
+      <figcaption>For each participant, the share of nights that fall in cluster 1. Many participants have nights in both clusters, so the K = 2 split describes types of nights more than types of people.</figcaption>
+    </figure>
+
+    <h3>Hierarchical clustering on the participants</h3>
+    <p>The hierarchical clustering was run on the 98 participant averages. The largest gap between merge heights (0.111) occurs at three groups, which points to three groups of participants.</p>
+    <figure class="figure">
+      <img src="images/clustering/dendrogram.png" alt="Dendrogram of the 98 participants using cosine distance and average linkage" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>Hierarchical clustering of the 98 participants (cosine distance, average linkage). Each leaf is one participant.</figcaption>
+    </figure>
+
+    <h3>Comparing K-means and hierarchical clustering</h3>
+    <p>Starting with K-means, the silhouette plot shows the best value of K at 2, while the elbow plot shows no clear bend. However, when looking at the hierarchical clustering, the best value turns out to be 3 clusters. There is some room for debate, seeing that K-means was conducted on an 18,728x18 matrix and hierarchical clustering was performed on a 98x18 matrix. The difference here is that K-means was clustering nights while hierarchical was clustering people. To compare the two methods directly, K-means was also run on the same 98 participants for 2, 3, and 4 groups. When the two methods were compared using a crosstab in pandas, a cluster quantity of three yielded the highest agreement percentage, 82.65%, compared with 79.59% for two and 70.41% for four. This implies that three is the best number of groups for the participants. Because the nights form one continuous spread, this result does not carry over to the nights themselves.</p>
+
+    <h3>The three participant groups</h3>
+    <p>The three groups below come from cutting the dendrogram at three groups. Each line in the plot is a group's average on every standardized feature.</p>
+    <figure class="figure">
+      <img src="images/clustering/participant_groups_k4.png" alt="Parallel plot of the average profile of each of the three participant groups on the 18 standardized features" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>Average profile of each participant group (hierarchical, 3 groups). Group 1 is blue, group 2 red, and group 3 green.</figcaption>
+    </figure>
+    <p><strong>Group 1 (43 participants).</strong> Group 1, on average, has slightly above-average deep sleep and REM sleep, average light sleep, and lower awake time. Its sleep score and overnight HRV are higher than average, and its breathing rate is the lowest of the three groups. Its resting heart rate is the lowest of the three, and its max heart rate, average stress and max stress are low. Steps and resting calories are average, and active calories and intensity durations are low. This is the group with the most favorable recovery measures, together with low daytime strain. These are same-day group averages across different people, not trends over time, so they do not show that less activity leads to better sleep.</p>
+    <p><strong>Group 2 (32 participants).</strong> Group 2, on average, exhibits higher amounts of both vigorous and moderate intensity time. They also have a higher bmr, higher active kcals, and slightly above-average steps and max stress. Their average stress level is also high, as are their max heart rate and resting heart rate (mostly recorded during sleep). Their HRV and sleep scores are lower. Group 2 on average also has the lowest HRV, the lowest REM and light sleep, and a low overall sleep score. Whether these records indicate that the people in group 2 are extremely active or less fit is hard to say due to the way Garmin calculates those daily values. Garmin's stress value is based on heart rate variability. Intensity levels are calculated by one's heart rate surpassing a certain threshold. Active kcals are also influenced by heart rate. High basal metabolic rates are also correlated with larger body sizes. But similar readings could result from extremely active people.</p>
+    <p><strong>Group 3 (23 participants).</strong> Group 3, on average, has the lowest resting calories (bmr), which generally tracks a smaller body size, less vigorous intensity time, and fewer steps. They have higher resting heart rates, lower overnight HRV, and the highest breathing rates (mean and minimum). Their sleep shows the least deep sleep, more time awake, and lower sleep scores. This profile is consistent with disrupted sleep, but it is not a diagnosis.</p>
   </div>
 
   <div class="method-section">
     <span class="tag">Conclusions</span>
-    <p>What was learned from Clustering that pertains to the topic.</p>
+    <p>Group 1 shows the best overall recovery metrics, with high HRV and sleep score and low resting heart rate, stress and breathing rate. Group 2 shows poor recovery metrics such as low HRV, high resting heart rate, high stress, low REM sleep and a low overall sleep score. Group 3 also exhibits poor overall recovery metrics, with high average and minimum breathing rates, high awake time (sleep disruptions), low deep sleep, a low sleep score, low overnight HRV and a high resting heart rate. This profile is consistent with disrupted sleep, though it is not a diagnosis, and Garmin's breathing rate is an estimate. The nights themselves formed one continuous spread with weak separation, so the grouping is clearer for participants than for individual nights.</p>
   </div>
 </div>
 
