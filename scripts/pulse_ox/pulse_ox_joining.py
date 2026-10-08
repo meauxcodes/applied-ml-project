@@ -38,7 +38,7 @@ print("sleep after", sleep.shape)
 
 nightly_respiration = nightly_respiration[night_keys + ["breathsPerMinute_mean","breathsPerMinute_std", "breathsPerMinute_min", "breathsPerMinute_max"]]
 
-sleep_pulse_ox = sleep_pulse_ox[night_keys + ["spo2_mean", "spo2_std", "spo2_min", "spo2_max", "spo2_count"]]
+sleep_pulse_ox = sleep_pulse_ox[night_keys + ["spo2_mean", "spo2_std", "spo2_min", "spo2_max"]]
 
 hrv = hrv[keys + ["lastNightAvg", "lastNight5MinHigh"]]
 hrv = hrv.drop_duplicates(subset=keys, keep="last")

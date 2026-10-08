@@ -100,6 +100,79 @@
 <main class="shell">
 
 <div class="prose">
+  <h2>Cohort Data: Elpis Alliance</h2>
+
+  <h3>Where the data comes from</h3>
+  <p>The cohort dataset contains 98 unique individuals who are either veterans themselves or immediate family members of veterans. Each opted into a Sleep Savant Program hosted by Elpis Alliance, the nonprofit introduced on the Introduction tab. Their data comes from Garmin watches, most provided by Elpis and some brought by the participants themselves, and it flows into LabFront, which consolidates it. The nights recorded run from February 28, 2025 through September 28, 2026.</p>
+
+  <h3>Access and raw format</h3>
+  <p>Read-only collaborator access to the cohorts in LabFront was granted for this project. LabFront held ten cohorts. Two were not downloaded: one had a single participant, and one had only just begun. The remaining eight began between February 2025 and June 2026. Downloading them produced a nested file tree for each cohort, organized by participant, then by metric suite, with one CSV for each day inside each suite. In total, the export held 366,631 files.</p>
+  <figure class="figure">
+    <img src="images/dataprep/file_tree_sanitized.jpg" alt="Folder tree of the raw LabFront export showing one folder per data type inside a participant folder, with one CSV per day. Cohort and participant names are redacted." style="width:100%; max-width:500px; display:block; margin:0 auto; border-radius:4px;">
+    <figcaption>Structure of the raw LabFront export: cohort, then participant, then data type, then one CSV per day. Cohort and participant names are redacted.</figcaption>
+  </figure>
+
+  <h3>Stacking</h3>
+  <p>A stacking script was developed to sift through each folder in a loop. The first task was to identify which data types were necessary. Using the single participant's Garmin data as the reference, each folder in the larger dataset was reviewed and compared to determine the exact folders, or "wanted data types," needed to mirror the same metrics. Those eight data types were put into a list, and an empty "tables" dictionary was created with one entry for each. A loop then ran through the entire nested folder system and kept moving downward for as long as it found folders. When it reached a CSV file belonging to a wanted data type, that file was read into a dataframe, tagged with the participant's ID and cohort, and appended to the list for that data type. Files that were not CSVs were skipped, and CSVs that contained no data were skipped and counted as "dropped." In total, 207,324 files were read and 26 were dropped. At the end, the data was concatenated and eight distinct CSVs were generated, one for each data type, each containing every participant and every day.</p>
+  <p>Pulse-ox data was left out at this stage. Only 44% of nights had it, probably because Garmin requires the feature to be enabled manually. Keeping it would have meant removing about 56% of the dataset. The intent is to revisit this metric as a separate dataset, as those values could offer valuable insight.</p>
+
+  <h3>Nightly breathing values</h3>
+  <p>Sleep respiration was handled separately because it is recorded once per minute of sleep rather than once per night. The sleep respiration file held 10,348,537 readings. Readings of zero, which mean no measurement was taken, were removed (22,970), as were duplicate readings from participants enrolled in two cohorts, leaving 8,571,564 readings. The remaining readings were grouped by participant and by night, and each night was summarized with four values: the average, the variability (standard deviation), the lowest, and the highest breaths per minute. This collapsed the minute-by-minute readings down to one overnight observation, producing 19,449 nights that were later matched to the rest of the data.</p>
+
+  <h3>Joining</h3>
+  <p>Once those eight CSVs were established, a joining script was developed. After looking further at the stacked files, it was determined that only a subset contained what the project was looking for. Four were used: sleep summary, HRV summary, daily summary, and sleep respiration. The other four were sleep stage, stress, all-day respiration, and user metrics. Sleep stage and stress repeated information already found in the summaries, and all-day respiration and user metrics fell outside the project's focus on sleep. Most of the unused data was also recorded reading by reading, which is not ideal for the methods used in this analysis. The one exception was sleep respiration, which is recorded the same way. Those readings were converted to nightly values and added to the larger dataset.</p>
+  <p>Once each CSV was read in, the script kept only the needed columns from each and removed duplicate days. One of the eight cohorts consisted entirely of people already enrolled in another cohort, so removing its duplicates left 98 unique participants across seven cohort labels.</p>
+  <p>The eight daytime columns, covering stress and activity, were then moved by one day. This was done because of how Garmin labels data and because of the goals of this project. Garmin labels overnight metrics such as sleep stages with the date the individual woke up, and labels metrics such as steps, stress, and physical activity with the day on which they occurred. So within a single date, all of the physical activity comes after the sleep. Because this project looks at how different aspects of daily life relate to the following night's sleep, those columns were moved forward one date, so each row now holds a night together with the day that led into it.</p>
+  <p>Everything was then merged into one table by participant ID and date. The breathing values were matched to each night using Garmin's sleep summary ID, a unique tracking value for each sleep session, which ensures every metric is attributed to the correct session. The ID was dropped after the merge. The final steps were to relabel the cohorts with more readable labels and, for de-identification, to replace the participant IDs from LabFront with generic ones (P1, P2, and so on). The joined table has 18,978 rows and 25 columns.</p>
+  <p>In the personal Garmin file, each date's activity and the sleep that ended that morning sit on the same row, so the data is shifted forward by one day in the plotting code before activity is compared with the following night's sleep.</p>
+
+  <h3>Cleaning</h3>
+  <p>For cleaning, it was decided early on that a lot of strange phenomena can occur in physiological data and that outliers are not always bad data. The decision was made to drop only rows with missing or impossible data. For example, a full day of resting calories under 1,000 is not possible given basal metabolic rates, and neither is an HRV reading of zero. Rows like these were removed. As a result, only 250 of 18,978 rows, about 1.3%, were removed: 150 for missing values, 21 for invalid HRV readings, 20 for partial days, and 59 for days with no steps recorded. That left 18,728 nights.</p>
+  <div style="overflow-x:auto; margin:1em 0;">
+    <table style="border-collapse:collapse; width:100%; max-width:560px;">
+      <thead>
+        <tr>
+          <th style="text-align:left; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Step</th>
+          <th style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Rows remaining</th>
+          <th style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Removed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Joined table</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">18,978</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);"></td></tr>
+        <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Missing values removed</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">18,828</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">150</td></tr>
+        <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Invalid stress removed</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">18,828</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">0</td></tr>
+        <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Invalid HRV removed</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">18,807</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">21</td></tr>
+        <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Partial days removed</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">18,787</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">20</td></tr>
+        <tr><td style="padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">Zero-step days removed</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">18,728</td><td style="text-align:right; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.25);">59</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Raw vs. Cleaned (cohort data)</h3>
+  <div class="figure-grid">
+    <figure class="figure">
+      <img src="images/dataprep/cohort-raw.png" alt="Sample of the joined cohort data before cleaning, with missing and impossible values highlighted in pink" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>Sample of the joined data before cleaning. Missing or impossible values are highlighted in pink, such as stress levels of -1 or -2, blank heart rate values, and days with zero steps.</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="images/dataprep/cohort-clean-sample.png" alt="Sample of the cleaned cohort data with no missing or impossible values" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>Sample of the cleaned data, sorted by average stress. The rows flagged in the raw sample are gone and no missing or impossible values remain.</figcaption>
+    </figure>
+  </div>
+
+  <h3>Cohort sources</h3>
+  <div class="linkrow">
+    <a href="data/raw/cohort_joined.csv">Raw (joined) cohort data — link</a>
+    <a href="data/clean/cohort_cleaned.csv">Cleaned cohort data — link</a>
+    <a href="data/clean/cohort_data_dictionary.csv">Data dictionary — link</a>
+    <a href="scripts/cohort_stacking.py">Stacking code — link</a>
+    <a href="scripts/cohort_respiration.py">Respiration code — link</a>
+    <a href="scripts/cohort_joining.py">Joining code — link</a>
+    <a href="scripts/cohort_cleaning.py">Cleaning code — link</a>
+    <a href="https://github.com/meauxcodes/applied-ml-project" target="_blank">Full project repository — link</a>
+  </div>
+
+  <h2>Personal Garmin Data</h2>
   <h2>Data Collection</h2>
   <p>Each day, personal wearable health data is downloaded using the Garmin Connect API through <code>cyberjunky/python-garminconnect</code>. This API is a community-maintained Python client and is worth noting that this is not Garmin's official developer API. It authenticates using Garmin Connect login credentials, which are stored in a <code>.env</code> file and excluded from version control via <code>.gitignore</code>. After logging in, session tokens get cached locally so the script doesn't have to log in fresh every run.</p>
   <p>The code builds a list of each date that has occurred since data collection started on September 4, 2026. Loops are then made through that list of dates, making API calls for each day and metric and saved to variables for simpler indexing. Right now, that's 40+ metrics per day. Examples of some of the key metrics are sleep stage breakdowns, heart rate variability, respiration rate, and blood oxygen saturation. This metric quantity will likely shrink once EDA identifies which features actually matter. Each API call includes a two-second delay, so the server doesn't get bogged down and days don't get skipped from rate limiting.</p>
@@ -130,7 +203,7 @@
   <figcaption>Raw data: Initially tracking was not enabled for the SpO2 metric. Additionally, for the first few days, there was not enough data to calculate the HRV average.</figcaption>
 </figure>
     <figure class="figure">
-  <img src="images/dataprep/cleaned-data-sample.png" alt="Sample of cleaned Garmin data with no missing values" style="width:100%; display:block; border-radius:4px;">
+  <img src="images/dataprep/cohort_cleaned.png" alt="Sample of cleaned Garmin data with no missing values" style="width:100%; display:block; border-radius:4px;">
   <figcaption>Cleaned data: SpO2 columns were removed and HRV weekly avg was backfilled; no remaining missing values.</figcaption>
 </figure>
   </div>
