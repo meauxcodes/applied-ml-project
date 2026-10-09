@@ -195,12 +195,12 @@
       <img src="images/pca/pc2_loadings.png" alt="Bar chart of PC2 loadings for every feature, sorted by magnitude" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
       <figcaption>PC2 loadings, sorted by magnitude.</figcaption>
     </figure>
-    <p><strong>PC3 (10.8%): sleep duration.</strong> Total sleep duration, light sleep, REM sleep, and the overall sleep score carry the largest loadings, with maximum heart rate and vigorous intensity time only just past the cutoff. Deep sleep and awake time barely load, which is why this component is better described by the amount of sleep than by its quality.</p>
+    <p><strong>PC3 (10.8%): sleep duration, sleep stages, and activity.</strong> Total sleep duration, light sleep, REM sleep, and the overall sleep score carry the largest loadings, with maximum heart rate and vigorous intensity time only just past the cutoff. Deep sleep and awake time barely load, which is why this component is better described by the amount of sleep and its light and REM stages than by its quality.</p>
     <div style="overflow-x:auto; margin:1em 0;">
       <table style="border-collapse:collapse; width:100%; max-width:640px;">
         <thead>
           <tr>
-            <th style="text-align:left; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Sleep duration (positive loadings)</th>
+            <th style="text-align:left; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Sleep duration, stages, and activity (positive loadings)</th>
             <th style="text-align:left; padding:6px 10px; border-bottom:1px solid rgba(128,128,128,0.5);">Negative loadings</th>
           </tr>
         </thead>
@@ -222,7 +222,7 @@
 
   <div class="method-section">
     <span class="tag">Conclusions</span>
-    <p>Looking at the scree plot, the top three principal components account for about 51% of the variance. They show patterns between daily activities and that night's sleep metrics. PC1 identifies a "strain versus recovery" pattern in which strain-side measures rise together (active kCals, average stress, resting and minimum heart rate, breaths per minute) while recovery measures fall (HRV, overall sleep score). PC2 identifies a "daytime activity versus sleep length and breathing rate" pattern in which more daytime activity (steps, max heart rate, active kCals, max stress, moderate and vigorous activity) tends to occur together with shorter sleep and lower breathing rates (mean and max breaths per minute, total sleep duration, REM duration). PC3 identifies a "sleep duration" pattern, with total sleep, light sleep, REM sleep, and the overall sleep score rising together, and max heart rate and vigorous intensity only slightly. Based on the scree plot, 9 principal components would be kept, as that surpasses the 80% threshold. The last 13 components contribute on average only about 1.4% explained variance each, so dropping them simplifies the model while possibly eliminating additional noise.</p>
+    <p>Looking at the scree plot, the top three principal components account for about 51% of the variance. They show patterns between daily activities and that night's sleep metrics. PC1 identifies a "strain versus recovery" pattern in which strain-side measures rise together (active kCals, average stress, resting and minimum heart rate, breaths per minute) while recovery measures fall (HRV, overall sleep score). PC2 identifies a "daytime activity versus sleep length and breathing rate" pattern in which more daytime activity (steps, max heart rate, active kCals, max stress, moderate and vigorous activity) tends to occur together with shorter sleep and lower breathing rates (mean and max breaths per minute, total sleep duration, REM duration). PC3 identifies a "sleep duration, sleep stages, and activity" pattern, with total sleep, light sleep, REM sleep, and the overall sleep score rising together, and max heart rate and vigorous intensity only slightly. Based on the scree plot, 9 principal components would be kept, as that surpasses the 80% threshold. The last 13 components contribute on average only about 1.4% explained variance each, so dropping them simplifies the model while possibly eliminating additional noise.</p>
     <p>When looking at the K=2 clustering scatter plot, K-means split the data close to the middle, near where PC1 = 0. Since PC1 describes almost twice as much variance as PC2, it makes sense that the biggest difference between nights would be found along PC1. K-means backs up this notion by cutting in that direction as well. When comparing against the loading plot for PC1, that split describes strain versus recovery.</p>
   </div>
 </div>

@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns   
+import numpy as np
+import seaborn as sns
+from matplotlib.colors import LinearSegmentedColormap
 
 clean_data = pd.read_csv("../data/clean/cleaned_garmin_data.csv")
 
@@ -211,10 +213,10 @@ corr_columns = [
 ]
 correlation_data = clean_data[corr_columns].copy()
 correlation_data["previous day body battery drained"] = clean_data["body battery drained"].shift(1)
-
+site_cmap = LinearSegmentedColormap.from_list("site_diverging", ["#8A97B8", "#EDEFF5", "#C9645A"])
 # Plotting the heatmap
 plt.figure(figsize=(12, 10))
-sns.heatmap(correlation_data.corr(), annot=True, fmt=".2f", cmap="coolwarm", square=True, cbar_kws={"shrink": .8})
+sns.heatmap(correlation_data.corr(), annot=True, fmt=".2f", cmap=site_cmap, square=True, cbar_kws={"shrink": .8})
 plt.title("Correlation Heatmap")
 plt.tight_layout()
 plt.savefig("../images/dataprep/correlation_heatmap.png")
@@ -235,4 +237,179 @@ ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
 plt.xticks(rotation = 90)
 plt.tight_layout()
 plt.savefig("../images/dataprep/intensity_minutes_by_day.png")
+plt.close()
+
+
+### Visualization #15 ###
+### Redrawn NVSD Graph ###
+
+sleep_apnea = np.array([1.0, 0.40, 3.2, 1.3, 6.6, 2.6])
+insomnia = np.array([0.75, 0.25, 2.3, 0.5, 5.1, 1.1])
+other = np.array([0.85, 0.15, 1.2, 0.2, 2.3, 0.65])
+small_types = np.array([0.6, 0.05, 1.5, 0.35, 2.05, 0.35])
+x = [0, 1, 2.5, 3.5, 5, 6]
+total_percentages = [3.2, 0.9, 8.2, 2.4, 16.1, 4.7]
+
+fig, ax = plt.subplots()
+ax.bar(x, sleep_apnea, label = "Sleep Apnea", color = "#9C4438")
+ax.bar(x, insomnia, label = "Insomnia", color = "#8A97B8", bottom = sleep_apnea)
+ax.bar(x, other, label = "Other Sleep Disorders", color = "#A6841F", bottom = sleep_apnea + insomnia)
+bars = ax.bar(x, small_types, label = "Hypersomnia, Movement, Parasomnia", color = "#1B2340", bottom = sleep_apnea + insomnia + other)
+ax.bar_label(bars, labels=[f"~{v:.1f}%" for v in total_percentages], fontsize=10, padding=2)
+ax.set_xticks(x)
+ax.set_xticklabels(["PTSD","No PTSD","PTSD","No PTSD","PTSD","No PTSD"])
+ax.text(0.5, -0.13, "FY 2000", transform=ax.get_xaxis_transform(), ha="center")
+ax.text(3.0, -0.13, "FY 2005", transform=ax.get_xaxis_transform(), ha="center")
+ax.text(5.5, -0.13, "FY 2010", transform=ax.get_xaxis_transform(), ha="center")
+ax.set_title("Diagnosed Sleep Disorders Among Veterans in VA Care, by PTSD Status", fontsize = 11)
+ax.set_ylabel("% of group with a diagnosed sleep disorder")
+ax.legend(loc="upper left")
+plt.tight_layout()
+plt.savefig("../images/intro/ptsd_sleep_disorders.png", bbox_inches="tight")
+plt.close()
+
+
+##########################################################
+### COHORT (98 PARTICIPANTS) VISUALIZATIONS ###
+##########################################################
+
+cohort = pd.read_csv("../data/clean/cohort_cleaned.csv")
+cohort["calendarDate"] = pd.to_datetime(cohort["calendarDate"])
+
+# Rows are not in order; sorting by participant and date to match n-of-one data
+cohort = cohort.sort_values(["participant_id", "calendarDate"]).reset_index(drop=True)
+
+# adding columns to match the n-of-one columns
+cohort["total calories"] = cohort["activeKilocalories"] + cohort["bmrKilocalories"]
+cohort["deep sleep percent"] = cohort["deepSleepDurationInMs"] / cohort["durationInMs"] * 100
+cohort["rem sleep percent"] = cohort["remSleepInMs"] / cohort["durationInMs"] * 100
+
+# Steps, calories, and stress were moved forward one date, so each row's
+# daily values are from the day before that night.
+next_date = cohort.groupby("participant_id")["calendarDate"].shift(-1)
+is_next_day = (next_date - cohort["calendarDate"]).dt.days == 1
+
+cohort["next day stress"] = cohort.groupby("participant_id")["averageStressInStressLevel"].shift(-1).where(is_next_day)
+cohort["next day calories"] = cohort.groupby("participant_id")["total calories"].shift(-1).where(is_next_day)
+
+
+### Cohort Visualization match with N-of-1 visualization #2 ###
+### Overnight HRV vs Next-Day Average Stress ###
+
+fig, ax = plt.subplots()
+ax.scatter(cohort["lastNightAvg"], cohort["next day stress"], color="#9C4438", s=6, alpha=0.3)
+ax.set_title("Overnight HRV vs. Next-Day Average Stress (98 Participants)")
+ax.set_xlabel("Overnight HRV (ms)")
+ax.set_ylabel("Next-Day Average Stress")
+
+plt.tight_layout()
+plt.savefig("../images/dataprep/cohort_hrv_vs_next_day_stress_scatter.png")
+plt.close()
+
+
+### Cohort Visualization match with N-of-1 visualization #3 ###
+### Total Calories vs HRV (Scatterplot) ###
+
+fig, ax = plt.subplots()
+ax.scatter(cohort["next day calories"], cohort["lastNightAvg"], color="#9C4438", s=6, alpha=0.3)
+ax.set_title("Total Calories Burned vs Overnight HRV (98 Participants)")
+ax.set_ylabel("Overnight HRV (Avg)")
+ax.set_xlabel("Total Calories Burned")
+
+plt.xticks(rotation = 45)
+plt.tight_layout()
+plt.savefig("../images/dataprep/cohort_total_calories_vs_hrv_scatter.png")
+plt.close()
+
+
+### Cohort Visualization match with N-of-1 visualization #4 ###
+### Total Steps vs Next Night Sleep Score (Scatterplot) ###
+
+fig, ax = plt.subplots()
+# steps are already the day before the night, so no shift is needed here
+ax.scatter(cohort["steps"], cohort["overallSleepScore"], color="#8A97B8", s=6, alpha=0.3)
+ax.set_title("Total Steps vs Next Night Sleep Score (98 Participants)")
+ax.set_ylabel("Next Night Sleep Score")
+ax.set_xlabel("Total Steps")
+
+plt.xticks(rotation = 45)
+plt.tight_layout()
+plt.savefig("../images/dataprep/cohort_total_steps_vs_next_night_sleep_score_scatter.png")
+plt.close()
+
+
+### Cohort Visualization match with N-of-1 visualization #8 ###
+### Average Respiration Rate (Sleep) vs Overall Sleep Score ###
+
+fig, ax = plt.subplots()
+ax.scatter(cohort["overallSleepScore"], cohort["breathsPerMinute_mean"], color="#A6841F", s=6, alpha=0.3)
+ax.set_title("Average Respiration Rate (Sleep) vs Sleep Score (98 Participants)")
+ax.set_xlabel("Overall Sleep Score")
+ax.set_ylabel("Average Respiration Rate (Sleep)")
+
+plt.tight_layout()
+plt.savefig("../images/dataprep/cohort_average_respiration_rate_sleep_vs_sleep_score.png")
+plt.close()
+
+
+### Cohort Visualization match with N-of-1 visualization #11 ###
+### Sleep Score Distribution ###
+
+fig, ax = plt.subplots()
+ax.hist(cohort["overallSleepScore"], bins=20, color="#A6841F", alpha=0.7)
+ax.set_title("Sleep Score Distribution (98 Participants)")
+ax.set_xlabel("Sleep Score")
+ax.set_ylabel("Number of Nights")
+
+plt.tight_layout()
+plt.savefig("../images/dataprep/cohort_sleep_score_distribution.png")
+plt.close()
+
+
+### Cohort Visualization match with N-of-1 visualization #12 ###
+### Recovery Metric Boxplots ###
+
+plot_data = [
+    cohort["overallSleepScore"],
+    cohort["averageStressInStressLevel"],
+    cohort["deep sleep percent"],
+    cohort["rem sleep percent"]
+]
+fig, ax = plt.subplots()
+ax.boxplot(plot_data, patch_artist=True, boxprops=dict(facecolor="#8A97B8", alpha=0.7))
+ax.set_title("Recovery Metrics Boxplots (98 Participants)")
+ax.set_ylabel("Score")
+ax.set_xlabel("Metric")
+ax.set_xticklabels(["Overall Sleep Score", "Avg Daily Stress", "Deep Sleep %", "REM Sleep %"])
+
+plt.tight_layout()
+plt.savefig("../images/dataprep/cohort_recovery_metrics_boxplots.png")
+plt.close()
+
+
+### Cohort Visualization match with N-of-1 visualization #13 ###
+### Correlation Heat Map ###
+
+
+cohort_corr_columns = [
+    "lastNightAvg",
+    "overallSleepScore",
+    "averageStressInStressLevel",
+    "restingHeartRateInBeatsPerMinute",
+    "minHeartRateInBeatsPerMinute",
+    "breathsPerMinute_mean",
+    "deepSleepDurationInMs",
+    "remSleepInMs",
+    "durationInMs",
+    "vigorousIntensityDurationInMs",
+    "steps",
+    "awakeDurationInMs"
+]
+
+site_cmap = LinearSegmentedColormap.from_list("site_diverging", ["#8A97B8", "#EDEFF5", "#C9645A"])
+plt.figure(figsize=(12, 10))
+sns.heatmap(cohort[cohort_corr_columns].corr(), annot=True, fmt=".2f", cmap=site_cmap, square=True, cbar_kws={"shrink": .8})
+plt.title("Correlation Heatmap (98 Participants)")
+plt.tight_layout()
+plt.savefig("../images/dataprep/cohort_correlation_heatmap.png")
 plt.close()

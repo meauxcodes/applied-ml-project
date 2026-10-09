@@ -8,6 +8,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,620&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
+  .viz-toggle { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 20px; }
+  .viz-toggle button { font: inherit; padding: 8px 14px; border: 1px solid #8A97B8; border-radius: 6px; background: transparent; color: inherit; cursor: pointer; }
+  .viz-toggle button[aria-pressed="true"] { background: #C9645A; border-color: #C9645A; color: #fff; }
+  .pair-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; align-items: start; }
+  .col-label { font-size: 0.8em; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.75; margin: 0 0 6px; }
+  #viz-area[data-mode="personal"] .cohort-col, #viz-area[data-mode="cohort"] .personal-col, #viz-area[data-mode="cohort"] .personal-only { display: none; }
+  #viz-area[data-mode="personal"] .pair-row, #viz-area[data-mode="cohort"] .pair-row { grid-template-columns: 1fr; max-width: 680px; margin-left: auto; margin-right: auto; }
+  .todo { color: #C9A227; font-style: italic; }
+  @media (max-width: 760px) { .pair-row { grid-template-columns: 1fr; } }
   .figure img { cursor: pointer; transition: opacity 0.15s; }
   .figure img:hover { opacity: 0.85; }
   #lightbox-overlay {
@@ -108,7 +117,7 @@
   <h3>Access and raw format</h3>
   <p>Read-only collaborator access to the cohorts in LabFront was granted for this project. LabFront held ten cohorts. Two were not downloaded: one had a single participant, and one had only just begun. The remaining eight began between February 2025 and June 2026. Downloading them produced a nested file tree for each cohort, organized by participant, then by metric suite, with one CSV for each day inside each suite. In total, the export held 366,631 files.</p>
   <figure class="figure">
-    <img src="images/dataprep/file_tree_sanitized.jpg" alt="Folder tree of the raw LabFront export showing one folder per data type inside a participant folder, with one CSV per day. Cohort and participant names are redacted." style="width:100%; max-width:500px; display:block; margin:0 auto; border-radius:4px;">
+    <img src="images/dataprep/cohort-file-tree.jpg" alt="Folder tree of the raw LabFront export showing one folder per data type inside a participant folder, with one CSV per day. Cohort and participant names are redacted." style="width:100%; max-width:500px; display:block; margin:0 auto; border-radius:4px;">
     <figcaption>Structure of the raw LabFront export: cohort, then participant, then data type, then one CSV per day. Cohort and participant names are redacted.</figcaption>
   </figure>
 
@@ -151,11 +160,11 @@
   <h3>Raw vs. Cleaned (cohort data)</h3>
   <div class="figure-grid">
     <figure class="figure">
-      <img src="images/dataprep/cohort_raw.png" alt="Sample of the joined cohort data before cleaning, with missing and impossible values highlighted in pink" style="width:100%; display:block; border-radius:4px;">
+      <img src="images/dataprep/cohort-raw-sample.png" alt="Sample of the joined cohort data before cleaning, with missing and impossible values highlighted in pink" style="width:100%; display:block; border-radius:4px;">
       <figcaption>Sample of the joined data before cleaning. Missing or impossible values are highlighted in pink, such as stress levels of -1 or -2, blank heart rate values, and days with zero steps.</figcaption>
     </figure>
     <figure class="figure">
-      <img src="images/dataprep/cohort_cleaned.png" alt="Sample of the cleaned cohort data with no missing or impossible values" style="width:100%; display:block; border-radius:4px;">
+      <img src="images/dataprep/cohort-clean-sample.png" alt="Sample of the cleaned cohort data with no missing or impossible values" style="width:100%; display:block; border-radius:4px;">
       <figcaption>Sample of the cleaned data, sorted by average stress. The rows flagged in the raw sample are gone and no missing or impossible values remain.</figcaption>
     </figure>
   </div>
@@ -216,63 +225,144 @@
   <p>Remaining outliers (for example, a low REM sleep percentage on 9/5, or elevated heart rate and stress on certain nights) were reviewed individually rather than removed automatically. These reflect real recorded nights tied to known factors, such as late nights, nightly interruptions from pets or family members, or lifestyle factors like alcohol use, rather than data collection errors.</p>
 
   <h2>Exploratory Visualizations</h2>
-  <div class="figure-grid">
-    <figure class="figure">
-  <img src="images/dataprep/sleep_stage_over_time_bar.png" alt="Stacked bar chart of sleep stage duration by night" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>The largest portion of most nights was classified as "Light Sleep." "REM" and "Deep Sleep" varied more night to night. Total sleep also has a wide range from under 6 hours to nearly 10.</figcaption>
-</figure>
-    <figure class="figure">
-  <img src="images/dataprep/hrv_vs_next_day_stress_scatter.png" alt="Scatter plot of overnight HRV vs next-day average stress" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Data points show a general decrease in next-day stress as overnight HRV increases. However as more data is collected, this potential trend may change.</figcaption>
-</figure>
-    <figure class="figure">
-  <img src="images/dataprep/total_calories_vs_hrv_scatter.png" alt="Scatter plot of total calories versus overnight HRV" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>There does not appear to be any clear linear relationship between total daily calories burned and that night's HRV in the current data. The highest HRV reading occurs at a middle-level calorie count.</figcaption>
-</figure>
-    <figure class="figure">
-  <img src="images/dataprep/total_steps_vs_next_night_sleep_score_scatter.png" alt="Scatter plot of total steps versus next night's sleep score" style="width:100%; display:block; border-radius:4px;">
-  <figcaption><em>A majority of the nights with higher sleep scores are clustered under 10,000 steps. Though there are several points that fall outside of that cluster and therefore no real trend can be inferred.</em></figcaption>
-</figure>
-    <figure class="figure">
-  <img src="images/dataprep/body_battery_charged_vs_drained_bar.png" alt="Grouped bar chart of body battery charged versus drained by day" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Some days show drained clearly exceeding charged, while others go the other way. This data is directly reflective of each day's activity/intensity levels. More intense activity leads to more drainage of the body battery.</figcaption>
-</figure>
-    <figure class="figure">
-  <img src="images/dataprep/body_battery_drained_vs_next_night_sleep_score_scatter.png" alt="Scatter plot of body battery drained versus next night's sleep score" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Sleep score is shifted forward one day so each day's body battery (drained) lines up with the following night's sleep score. There appears to be a slight negative correlation between body battery drained and sleep score. The higher the loss in body battery (increased daily stress), the lower the sleep score that night.</figcaption>
-</figure>
-    <figure class="figure">
-  <img src="images/dataprep/average_respiration_rate_sleep_over_time.png" alt="Scatter plot of average sleep respiration rate over time" style="width:100%; display:block; border-radius:4px;">
-  <figcaption><em>Respiration rates constantly shift up and down over time. This is indicative of varying sleep quality and no consistent trends innately.</em></figcaption>
-</figure>
-    <figure class="figure">
-  <img src="images/dataprep/average_respiration_rate_sleep_vs_sleep_score.png" alt="Scatter plot of average sleep respiration rate versus sleep score" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>With the exception of one outlier in this current dataset, there appears to be a general downward slope when comparing average sleep respiration rate to overall sleep score. As average sleep respiration rate decreases, overall sleep score tends to increase.</figcaption>
-</figure>
-    <figure class="figure">
-  <img src="images/dataprep/average_sleep_stress_over_time.png" alt="Line chart of average sleep stress over time" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Average sleep stress ranges from under 10 to over 60 with no clear trend in either direction. When compared with other visualizations in this analysis, 9/13, which stands out as a night with particularly high sleep stress also shares a high respiration rate, high levels of body battery both drained and charged, and zero intensity minutes. This suggests strong correlations between all these metrics.</figcaption>
-</figure>
-    <figure class="figure">
-  <img src="images/dataprep/average_resting_heart_rate_over_time.png" alt="Line chart of average resting heart rate over time" style="width:100%; display:block; border-radius:4px;">
-  <figcaption>Resting heart rate ranges from 48 to 62 bpm across the tracked period, with no sustained upward or downward trend. The two highest points, 9/5 and 9/13, line up with the same nights already flagged for elevated stress or fragmented sleep elsewhere in this analysis.</figcaption>
-</figure>
-    <figure class="figure">
+  <div id="viz-toggle" class="viz-toggle" role="group" aria-label="Choose which data to display">
+    <button type="button" data-mode="side" aria-pressed="true">Side by side</button>
+    <button type="button" data-mode="personal" aria-pressed="false">Personal data (N-of-1)</button>
+    <button type="button" data-mode="cohort" aria-pressed="false">Cohort (98 participants)</button>
+  </div>
+  <div id="viz-area" data-mode="side">
+    <h3>Personal and cohort data compared</h3>
+    <div class="pair-row">
+      <div class="personal-col"><p class="col-label">Personal data (N-of-1)</p>
+<figure class="figure">
   <img src="images/dataprep/sleep_score_distribution.png" alt="Histogram of overall sleep score" style="width:100%; display:block; border-radius:4px;">
   <figcaption>Sleep scores are left skewed. Most nights land between a 70 and a 90 overall sleep score. A smaller cluster of lower sleep quality nights pull the low end of the distribution to the left.</figcaption>
 </figure>
-    <figure class="figure">
+      </div>
+      <div class="cohort-col"><p class="col-label">Cohort (98 participants)</p>
+<figure class="figure">
+  <img src="images/dataprep/cohort_sleep_score_distribution.png" alt="Histogram of overall sleep score across all 98 participants" style="width:100%; display:block; border-radius:4px;">
+  <figcaption class="todo">TODO: write caption</figcaption>
+</figure>
+      </div>
+    </div>
+    <div class="pair-row">
+      <div class="personal-col"><p class="col-label">Personal data (N-of-1)</p>
+<figure class="figure">
   <img src="images/dataprep/recovery_metrics_boxplots.png" alt="Boxplots comparing overall sleep score, average sleep stress, deep sleep percent, and REM sleep percent" style="width:100%; display:block; border-radius:4px;">
   <figcaption>Overall sleep score shows the widest spread. Deep Sleep Percentage shows the smallest spread, consistently falling between 15% and 20% of total sleep duration. Average sleep stress includes one clear outlier, corresponding to a night with known lifestyle factors affecting recovery.</figcaption>
 </figure>
-    <figure class="figure">
+      </div>
+      <div class="cohort-col"><p class="col-label">Cohort (98 participants)</p>
+<figure class="figure">
+  <img src="images/dataprep/cohort_recovery_metrics_boxplots.png" alt="Boxplots of overall sleep score, average daily stress, deep sleep percent, and REM sleep percent across all 98 participants" style="width:100%; display:block; border-radius:4px;">
+  <figcaption class="todo">TODO: write caption</figcaption>
+</figure>
+      </div>
+    </div>
+    <div class="pair-row">
+      <div class="personal-col"><p class="col-label">Personal data (N-of-1)</p>
+<figure class="figure">
   <img src="images/dataprep/correlation_heatmap.png" alt="Correlation heatmap of twelve key recovery and activity metrics" style="width:100%; display:block; border-radius:4px;">
   <figcaption>The metric that correlates most strongly with overall sleep score is "sleep total seconds." Although, the highest correlation from any individual sleep stage is "REM sleep seconds." Also worth noting, at this stage in data collection, a counterintuitive trend has emerged: on days with an increased drainage of "body battery," that following night's "overall sleep score" and "REM sleep seconds" both tend to decrease.</figcaption>
 </figure>
-    <figure class="figure">
+      </div>
+      <div class="cohort-col"><p class="col-label">Cohort (98 participants)</p>
+<figure class="figure">
+  <img src="images/dataprep/cohort_correlation_heatmap.png" alt="Correlation heatmap of twelve recovery and activity metrics across all 98 participants" style="width:100%; display:block; border-radius:4px;">
+  <figcaption class="todo">TODO: write caption</figcaption>
+</figure>
+      </div>
+    </div>
+    <div class="pair-row">
+      <div class="personal-col"><p class="col-label">Personal data (N-of-1)</p>
+<figure class="figure">
+  <img src="images/dataprep/hrv_vs_next_day_stress_scatter.png" alt="Scatter plot of overnight HRV vs next-day average stress" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Data points show a general decrease in next-day stress as overnight HRV increases. However as more data is collected, this potential trend may change.</figcaption>
+</figure>
+      </div>
+      <div class="cohort-col"><p class="col-label">Cohort (98 participants)</p>
+<figure class="figure">
+  <img src="images/dataprep/cohort_hrv_vs_next_day_stress_scatter.png" alt="Scatter plot of overnight HRV versus next-day average stress for all 98 participants" style="width:100%; display:block; border-radius:4px;">
+  <figcaption class="todo">TODO: write caption</figcaption>
+</figure>
+      </div>
+    </div>
+    <div class="pair-row">
+      <div class="personal-col"><p class="col-label">Personal data (N-of-1)</p>
+<figure class="figure">
+  <img src="images/dataprep/total_calories_vs_hrv_scatter.png" alt="Scatter plot of total calories versus overnight HRV" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>There does not appear to be any clear linear relationship between total daily calories burned and that night's HRV in the current data. The highest HRV reading occurs at a middle-level calorie count.</figcaption>
+</figure>
+      </div>
+      <div class="cohort-col"><p class="col-label">Cohort (98 participants)</p>
+<figure class="figure">
+  <img src="images/dataprep/cohort_total_calories_vs_hrv_scatter.png" alt="Scatter plot of next-day total calories versus overnight HRV for all 98 participants" style="width:100%; display:block; border-radius:4px;">
+  <figcaption class="todo">TODO: write caption</figcaption>
+</figure>
+      </div>
+    </div>
+    <div class="pair-row">
+      <div class="personal-col"><p class="col-label">Personal data (N-of-1)</p>
+<figure class="figure">
+  <img src="images/dataprep/total_steps_vs_next_night_sleep_score_scatter.png" alt="Scatter plot of total steps versus next night's sleep score" style="width:100%; display:block; border-radius:4px;">
+  <figcaption><em>A majority of the nights with higher sleep scores are clustered under 10,000 steps. Though there are several points that fall outside of that cluster and therefore no real trend can be inferred.</em></figcaption>
+</figure>
+      </div>
+      <div class="cohort-col"><p class="col-label">Cohort (98 participants)</p>
+<figure class="figure">
+  <img src="images/dataprep/cohort_total_steps_vs_next_night_sleep_score_scatter.png" alt="Scatter plot of total steps versus next night sleep score for all 98 participants" style="width:100%; display:block; border-radius:4px;">
+  <figcaption class="todo">TODO: write caption</figcaption>
+</figure>
+      </div>
+    </div>
+    <div class="pair-row">
+      <div class="personal-col"><p class="col-label">Personal data (N-of-1)</p>
+<figure class="figure">
+  <img src="images/dataprep/average_respiration_rate_sleep_vs_sleep_score.png" alt="Scatter plot of average sleep respiration rate versus sleep score" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>With the exception of one outlier in this current dataset, there appears to be a general downward slope when comparing average sleep respiration rate to overall sleep score. As average sleep respiration rate decreases, overall sleep score tends to increase.</figcaption>
+</figure>
+      </div>
+      <div class="cohort-col"><p class="col-label">Cohort (98 participants)</p>
+<figure class="figure">
+  <img src="images/dataprep/cohort_average_respiration_rate_sleep_vs_sleep_score.png" alt="Scatter plot of average sleep respiration rate versus sleep score for all 98 participants" style="width:100%; display:block; border-radius:4px;">
+  <figcaption class="todo">TODO: write caption</figcaption>
+</figure>
+      </div>
+    </div>
+    <div class="personal-only">
+      <h3>Personal data only</h3>
+      <div class="figure-grid">
+<figure class="figure">
+  <img src="images/dataprep/sleep_stage_over_time_bar.png" alt="Stacked bar chart of sleep stage duration by night" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>The largest portion of most nights was classified as "Light Sleep." "REM" and "Deep Sleep" varied more night to night. Total sleep also has a wide range from under 6 hours to nearly 10.</figcaption>
+</figure>
+<figure class="figure">
+  <img src="images/dataprep/body_battery_charged_vs_drained_bar.png" alt="Grouped bar chart of body battery charged versus drained by day" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Some days show drained clearly exceeding charged, while others go the other way. This data is directly reflective of each day's activity/intensity levels. More intense activity leads to more drainage of the body battery.</figcaption>
+</figure>
+<figure class="figure">
+  <img src="images/dataprep/body_battery_drained_vs_next_night_sleep_score_scatter.png" alt="Scatter plot of body battery drained versus next night's sleep score" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Sleep score is shifted forward one day so each day's body battery (drained) lines up with the following night's sleep score. There appears to be a slight negative correlation between body battery drained and sleep score. The higher the loss in body battery (increased daily stress), the lower the sleep score that night.</figcaption>
+</figure>
+<figure class="figure">
+  <img src="images/dataprep/average_respiration_rate_sleep_over_time.png" alt="Scatter plot of average sleep respiration rate over time" style="width:100%; display:block; border-radius:4px;">
+  <figcaption><em>Respiration rates constantly shift up and down over time. This is indicative of varying sleep quality and no consistent trends innately.</em></figcaption>
+</figure>
+<figure class="figure">
+  <img src="images/dataprep/average_sleep_stress_over_time.png" alt="Line chart of average sleep stress over time" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Average sleep stress ranges from under 10 to over 60 with no clear trend in either direction. When compared with other visualizations in this analysis, 9/13, which stands out as a night with particularly high sleep stress also shares a high respiration rate, high levels of body battery both drained and charged, and zero intensity minutes. This suggests strong correlations between all these metrics.</figcaption>
+</figure>
+<figure class="figure">
+  <img src="images/dataprep/average_resting_heart_rate_over_time.png" alt="Line chart of average resting heart rate over time" style="width:100%; display:block; border-radius:4px;">
+  <figcaption>Resting heart rate ranges from 48 to 62 bpm across the tracked period, with no sustained upward or downward trend. The two highest points, 9/5 and 9/13, line up with the same nights already flagged for elevated stress or fragmented sleep elsewhere in this analysis.</figcaption>
+</figure>
+<figure class="figure">
   <img src="images/dataprep/intensity_minutes_by_day.png" alt="Grouped bar chart of moderate and vigorous intensity minutes by day" style="width:100%; display:block; border-radius:4px;">
   <figcaption>Vigorous activity dominates on most active days, while moderate-intensity minutes rarely appear. Days that show no intensity levels are representative of genuine rest days rather than missing data.</figcaption>
 </figure>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -375,6 +465,15 @@ document.addEventListener('keydown', function(e){
 });
 document.querySelectorAll('.figure img').forEach(function(img){
   img.addEventListener('click', function(){ openLightbox(img); });
+});
+
+document.querySelectorAll('#viz-toggle button').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.getElementById('viz-area').setAttribute('data-mode', btn.getAttribute('data-mode'));
+    document.querySelectorAll('#viz-toggle button').forEach(function(b){
+      b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+    });
+  });
 });
 </script>
 <div id="lightbox-overlay" onclick="closeLightbox()">
