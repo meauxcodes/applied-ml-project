@@ -103,8 +103,8 @@
 
   <div class="method-section">
     <span class="tag">Overview</span>
-    <p>PCA is the process of reducing dimensions in a data set. It builds new axes, called principal components, as weighted combinations of the original columns, and correlated columns tend to share a component. PCA accomplishes this by combining highly correlated variables to produce vectors (eigenvectors) that explain the width and direction of stretch of the data. The eigenvalue of each one, taken from the covariance matrix of the data, is the amount of variance along that vector, and the components are ordered from largest to smallest. Loadings are the weights in each eigenvector. When they are multiplied against the standardized data matrix, the output is the scores. These are essentially a projection of each data point onto that principal component; that direction.</p>
-    <p>Dimensionality reduction means keeping only the first few principal components, the ones carrying the most variance, and discarding the rest. More data muddies the waters, so PCA looks to throw away what can afford to be thrown away to make the picture clearer. Each kept component is still built from all of the original columns. This simplifies the analysis and makes it possible to visualize the data in two or three dimensions.</p>
+    <p>PCA is the process of reducing dimensions in a data set. It builds new axes, called principal components, as weighted combinations of the original columns, and correlated columns tend to share a component. PCA accomplishes this by combining highly correlated variables to produce vectors (eigenvectors) that explain the width and direction of stretch of the data. The eigenvalue of each one, taken from the covariance matrix of the data, is the amount of variance along that vector, and the components are ordered from largest to smallest. Loadings are the weights in each eigenvector. When they are multiplied against the standardized data matrix, the output is the scores. These scores are essentially just the new values of the data points once they are flattened or projected onto the PC axis/vector.</p>
+    <p>Dimensionality reduction means identifying which features are the most important in explaining the difference between observations by way of principal component calculation, keeping only the principal components that add up to a certain threshold of the variance, and then discarding the rest. More data muddies the waters, so PCA looks to throw away what can afford to be thrown away to make the picture clearer. Each kept component is still built from all of the original columns. This simplifies the analysis and makes it possible to visualize the data in two or three dimensions.</p>
     <p>The challenges of having 22 columns in this dataset are that only two or three dimensions can be drawn on a screen, redundant and noisy columns add to every distance calculation, and as more columns are added to the data matrix, the distances between points and their meaning become less informative. It is harder to make sense of the data. This follows the concept of the curse of dimensionality.</p>
     <figure class="figure">
       <img src="images/pca/scree_plot.png" alt="Scree plot showing the share of variance for each of the 22 principal components with a cumulative line" style="width:100%; max-width:560px; display:block; margin:0 auto; border-radius:4px;">
@@ -173,7 +173,7 @@
       <img src="images/pca/pc1_loadings.png" alt="Bar chart of PC1 loadings for every feature, sorted by magnitude" style="width:100%; max-width:640px; display:block; margin:0 auto; border-radius:4px;">
       <figcaption>PC1 loadings, sorted by magnitude.</figcaption>
     </figure>
-    <p><strong>PC2 (13.5%): daytime activity versus sleep length and breathing rate.</strong> Steps, maximum heart rate, active kilocalories, vigorous and moderate intensity time, and maximum stress load positive. Mean and maximum breathing rate, total sleep duration, and REM sleep load negative, with duration and REM only just past the cutoff.</p>
+    <p><strong>PC2 (13.5%): daytime activity versus sleep length and breathing rate.</strong> Steps, maximum heart rate, active kilocalories, vigorous and moderate intensity time, and maximum stress load positive. Mean and maximum breathing rate, total sleep duration, and REM sleep load negative, with duration and REM right at the cutoff.</p>
     <div style="overflow-x:auto; margin:1em 0;">
       <table style="border-collapse:collapse; width:100%; max-width:640px;">
         <thead>
@@ -232,7 +232,7 @@
 
 <footer>
   Applied Machine Learning &mdash; Semester Project &nbsp;/&nbsp; Built and maintained across Modules 1&ndash;5<br>
-  <span style="opacity:.75">Academic Integrity Disclaimer: AI tools were used to assist with website structure, layout, and styling. All written content, data analysis, and modeling were completed independently.</span>
+  <span style="opacity:.75">Academic Integrity Disclaimer: AI tools were used to assist with website structure, layout, styling, and functionality.</span>
 </footer>
 
 <script>

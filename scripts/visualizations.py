@@ -4,6 +4,8 @@ import numpy as np
 import seaborn as sns
 from matplotlib.colors import LinearSegmentedColormap
 
+##AI Tools were utilized to help verify plotting script and day-order script (shift)
+
 clean_data = pd.read_csv("../data/clean/cleaned_garmin_data.csv")
 
 ### Visualization #1 ###
@@ -273,24 +275,21 @@ plt.close()
 ### COHORT (98 PARTICIPANTS) VISUALIZATIONS ###
 ##########################################################
 
-cohort = pd.read_csv("../data/clean/cohort_cleaned.csv")
-cohort["calendarDate"] = pd.to_datetime(cohort["calendarDate"])
+##AI Tools were utilized to help verify plotting script and day-order script
 
-# Rows are not in order; sorting by participant and date to match n-of-one data
-cohort = cohort.sort_values(["participant_id", "calendarDate"]).reset_index(drop=True)
-
-# adding columns to match the n-of-one columns
-cohort["total calories"] = cohort["activeKilocalories"] + cohort["bmrKilocalories"]
+cohort = pd.read_csv("../data/clean/cohort_cleaned.csv") #reading in the cohort data
+cohort["calendarDate"] = pd.to_datetime(cohort["calendarDate"]) #the data has a weird timestamp so I'm converting that to an actual calendar date
+cohort = cohort.sort_values(["participant_id", "calendarDate"]).reset_index(drop=True) #my rows are not in order so I'm sorting them by participant and then by date
+cohort["total calories"] = cohort["bmrKilocalories"] +cohort["activeKilocalories"] #these three features didn't exist in the cohort data so I'm adding them to the dataset
 cohort["deep sleep percent"] = cohort["deepSleepDurationInMs"] / cohort["durationInMs"] * 100
 cohort["rem sleep percent"] = cohort["remSleepInMs"] / cohort["durationInMs"] * 100
 
-# Steps, calories, and stress were moved forward one date, so each row's
-# daily values are from the day before that night.
-next_date = cohort.groupby("participant_id")["calendarDate"].shift(-1)
-is_next_day = (next_date - cohort["calendarDate"]).dt.days == 1
 
-cohort["next day stress"] = cohort.groupby("participant_id")["averageStressInStressLevel"].shift(-1).where(is_next_day)
-cohort["next day calories"] = cohort.groupby("participant_id")["total calories"].shift(-1).where(is_next_day)
+next_date = cohort.groupby("participant_id")["calendarDate"].shift(-1) # Values for stress and other daily activity metrics have to be shifted one calendar day earlier so that they are accounted for before the sleep metrics
+is_next_day = (next_date - cohort["calendarDate"]).dt.days == 1 #this is a check for making sure that the dates line up as stated above
+cohort["next day calories"] = cohort.groupby("participant_id")["total calories"].shift(-1).where(is_next_day) # placing next day calorie levels where they belong in the order of days
+cohort["next day stress"] = cohort.groupby("participant_id")["averageStressInStressLevel"].shift(-1).where(is_next_day) # placing next day stress levels where they belong in the order of days
+
 
 
 ### Cohort Visualization match with N-of-1 visualization #2 ###
@@ -326,7 +325,6 @@ plt.close()
 ### Total Steps vs Next Night Sleep Score (Scatterplot) ###
 
 fig, ax = plt.subplots()
-# steps are already the day before the night, so no shift is needed here
 ax.scatter(cohort["steps"], cohort["overallSleepScore"], color="#8A97B8", s=6, alpha=0.3)
 ax.set_title("Total Steps vs Next Night Sleep Score (98 Participants)")
 ax.set_ylabel("Next Night Sleep Score")
