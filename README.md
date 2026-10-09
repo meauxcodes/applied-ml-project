@@ -1,60 +1,32 @@
-# Project Site — Setup Notes
+# Project Eventide
 
-This is a plain HTML/CSS site (no build step required) with all tabs required by the
-Module 1 Project Part 1 assignment already in place:
+Applied Machine Learning (CSCI 5612) semester project by Samuel Meaux, CU Boulder MS in Data Science.
 
-- `index.html` — Introduction
-- `dataprep.html` — Data Prep / EDA
-- `clustering.html` — Clustering
-- `pca.html` — PCA
-- `naivebayes.html` — Naive Bayes
-- `dectrees.html` — Decision Trees
-- `regression.html` — Regression
-- `adaboost.html` — AdaBoost
-- `gradientboosting.html` — Gradient Boosting
-- `xgboost.html` — XGBoost
-- `conclusions.html` — Conclusions
-- `about.html` — About Me (the one page allowed to be written in first person)
+Project Eventide explores whether everyday Garmin wearable data can show patterns consistent with disrupted sleep and poor recovery in veterans and their families. The primary dataset comes from the Sleep Savant Program hosted by Elpis Alliance (98 participants, 18,728 nights after cleaning). Data from a single individual was used for early exploration.
 
-The second half of the course was restructured (SVMs and Neural Networks were removed in
-favor of Regression, AdaBoost, Gradient Boosting, and XGBoost), so there is no `svms.html`
-or `nn.html` anymore.
+Live site: https://meauxcodes.github.io/applied-ml-project/
 
-Every page shares `style.css` and the same navigation rail across the top, so the
-site reads as one connected project rather than separate pages.
+## Site pages
 
-Content — the actual paragraphs, images, links, and figures — should be edited
-directly in each `.html` file as the corresponding Module is completed. Each method
-page (Clustering, PCA, Naive Bayes, etc.) already has the four required subsections
-built in: Overview, Data, Code, Results.
+- `index.html` - Introduction
+- `dataprep.html` - Data Prep / EDA
+- `clustering.html` - Clustering
+- `pca.html` - PCA
+- `naivebayes.html`, `dectrees.html`, `regression.html`, `adaboost.html`, `gradientboosting.html`, `xgboost.html` - later modules (in progress)
+- `conclusions.html` - Conclusions
+- `about.html` - About
+- `style.css` - shared styling
 
-## Deploying with GitHub Pages (free, recommended)
+## Folders
 
-1. Create a new **public** GitHub repository (e.g. `applied-ml-project`).
-2. Upload all files in this folder (`index.html`, the other `.html` files, and
-   `style.css`) to the root of that repository.
-3. In the repo, go to **Settings → Pages**.
-4. Under "Build and deployment," set **Source** to `Deploy from a branch`, branch
-   `main`, folder `/ (root)`. Save.
-5. GitHub will give you a live URL, typically:
-   `https://<your-username>.github.io/<repo-name>/`
-6. That URL — pointing at `index.html` (the Introduction tab) — is what you submit
-   in the .docx for each Project Part deliverable.
+- `data/raw` and `data/clean` - raw and cleaned datasets, plus the data dictionary
+- `scripts` - stacking, joining, cleaning and visualization code
+- `images` - figures used on the site
 
-Any time you push new commits to the repo, the live site updates automatically
-within a minute or two — so each Module, you just edit the relevant page(s), commit,
-and push.
+## Status
 
-## What's still placeholder (dashed boxes)
+Modules 1 and 2 are complete (Introduction, Data Prep / EDA, Clustering, PCA). The remaining method pages are placeholders until their modules.
 
-Every dashed box on the site marks something that still needs real content —
-these are intentional "TK" (to come) markers, not bugs. As each Module is
-completed, replace the relevant dashed box with the real writeup, figure,
-or links, and delete the box.
+## Hosting
 
-## Images
-
-Images referenced by figures are not yet linked — each `<figure class="figure">`
-currently shows a placeholder box. Once you have real images (plots, raw/clean data
-screenshots, etc.), save them into an `/images` folder in the repo and replace the
-placeholder `<div class="ph">...</div>` with `<img src="images/yourfile.png" alt="...">`.
+The site is plain HTML/CSS and is served by GitHub Pages from the `main` branch (root folder). Pushing to `main` updates the live site within a couple of minutes.

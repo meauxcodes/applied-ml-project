@@ -123,7 +123,7 @@
 
   <h3>Stacking</h3>
   <p>A stacking script was developed to sift through each folder in a loop. The first task was to identify which data types were necessary. Using the single participant's Garmin data as the reference, each folder in the larger dataset was reviewed and compared to determine the exact folders, or "wanted data types," needed to mirror the same metrics. Those eight data types were put into a list, and an empty "tables" dictionary was created with one entry for each. A loop then ran through the entire nested folder system and kept moving downward for as long as it found folders. When it reached a CSV file belonging to a wanted data type, that file was read into a dataframe, tagged with the participant's ID and cohort, and appended to the list for that data type. Files that were not CSVs were skipped, and CSVs that contained no data were skipped and counted as "dropped." In total, 207,324 files were read and 26 were dropped. At the end, the data was concatenated and eight distinct CSVs were generated, one for each data type, each containing every participant and every day.</p>
-  <p>Pulse-ox data was left out at this stage. Only 44% of nights had it, probably because Garmin requires the feature to be enabled manually. Keeping it would have meant removing about 56% of the dataset. The intent is to revisit this metric as a separate dataset, as those values could offer valuable insight.</p>
+  <p>Pulse-ox data was left out at this stage. Fewer than half of nights had it, probably because Garmin requires the feature to be enabled manually. Keeping it would have meant removing more than half of the dataset. The intent is to revisit this metric as a separate dataset, as those values could offer valuable insight.</p>
 
   <h3>Nightly breathing values</h3>
   <p>Sleep respiration was handled separately because it is recorded once per minute of sleep rather than once per night. The sleep respiration file held 10,348,537 readings. Readings of zero, which mean no measurement was taken, were removed (22,970), as were duplicate readings from participants enrolled in two cohorts, leaving 8,571,564 readings. The remaining readings were grouped by participant and by night, and each night was summarized with four values: the average, the variability (standard deviation), the lowest, and the highest breaths per minute. This collapsed the minute-by-minute readings down to one overnight observation, producing 19,449 nights that were later matched to the rest of the data.</p>
@@ -168,6 +168,9 @@
       <figcaption>Sample of the cleaned data, sorted by average stress. The rows flagged in the raw sample are gone and no missing or impossible values remain.</figcaption>
     </figure>
   </div>
+
+  <h3>Blood oxygen dataset</h3>
+  <p>Blood oxygen levels were not available for a majority of participants in the main cohort dataset. This is likely due to the manual requirement for enabling the tracking of that specific feature. For this reason, this specific metric was left out of the larger dataset. Due to the belief that the blood oxygen metric was valuable and because it is specifically tied to a research question, a third dataset was created, but in a limited form. The blood oxygen dataset contains only 47 participants (~48% of the 98 in the main cohort dataset) and 8,729 nights (~47% of the 18,728 in the main cohort dataset).</p>
 
   <h3>Cohort sources</h3>
   <div class="linkrow">
