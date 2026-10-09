@@ -117,7 +117,7 @@
   <h3>Access and raw format</h3>
   <p>Read-only collaborator access to the cohorts in LabFront was granted for this project. LabFront held ten cohorts. Two were not downloaded: one had a single participant, and one had only just begun. The remaining eight began between February 2025 and June 2026. Downloading them produced a nested file tree for each cohort, organized by participant, then by metric suite, with one CSV for each day inside each suite. In total, the export held 366,631 files.</p>
   <figure class="figure">
-    <img src="images/dataprep/cohort-file-tree.jpg" alt="Folder tree of the raw LabFront export showing one folder per data type inside a participant folder, with one CSV per day. Cohort and participant names are redacted." style="width:100%; max-width:500px; display:block; margin:0 auto; border-radius:4px;">
+    <img src="images/dataprep/file_tree_sanitized.jpg" alt="Folder tree of the raw LabFront export showing one folder per data type inside a participant folder, with one CSV per day. Cohort and participant names are redacted." style="width:100%; max-width:500px; display:block; margin:0 auto; border-radius:4px;">
     <figcaption>Structure of the raw LabFront export: cohort, then participant, then data type, then one CSV per day. Cohort and participant names are redacted.</figcaption>
   </figure>
 
@@ -160,11 +160,11 @@
   <h3>Raw vs. Cleaned (cohort data)</h3>
   <div class="figure-grid">
     <figure class="figure">
-      <img src="images/dataprep/cohort-raw-sample.png" alt="Sample of the joined cohort data before cleaning, with missing and impossible values highlighted in pink" style="width:100%; display:block; border-radius:4px;">
+      <img src="images/dataprep/cohort-raw.png" alt="Sample of the joined cohort data before cleaning, with missing and impossible values highlighted in pink" style="width:100%; display:block; border-radius:4px;">
       <figcaption>Sample of the joined data before cleaning. Missing or impossible values are highlighted in pink, such as stress levels of -1 or -2, blank heart rate values, and days with zero steps.</figcaption>
     </figure>
     <figure class="figure">
-      <img src="images/dataprep/cohort-clean-sample.png" alt="Sample of the cleaned cohort data with no missing or impossible values" style="width:100%; display:block; border-radius:4px;">
+      <img src="images/dataprep/cohort-cleaned.png" alt="Sample of the cleaned cohort data with no missing or impossible values" style="width:100%; display:block; border-radius:4px;">
       <figcaption>Sample of the cleaned data, sorted by average stress. The rows flagged in the raw sample are gone and no missing or impossible values remain.</figcaption>
     </figure>
   </div>
@@ -306,7 +306,7 @@
       <div class="personal-col"><p class="col-label">Personal data (N-of-1)</p>
 <figure class="figure">
   <img src="images/dataprep/total_steps_vs_next_night_sleep_score_scatter.png" alt="Scatter plot of total steps versus next night's sleep score" style="width:100%; display:block; border-radius:4px;">
-  <figcaption><em>A majority of the nights with higher sleep scores are clustered under 10,000 steps. Though there are several points that fall outside of that cluster and therefore no real trend can be inferred.</em></figcaption>
+  <figcaption>A majority of the nights with higher sleep scores are clustered under 10,000 steps. Though there are several points that fall outside of that cluster and therefore no real trend can be inferred.</figcaption>
 </figure>
       </div>
       <div class="cohort-col"><p class="col-label">Cohort (98 participants)</p>
@@ -347,7 +347,7 @@
 </figure>
 <figure class="figure">
   <img src="images/dataprep/average_respiration_rate_sleep_over_time.png" alt="Scatter plot of average sleep respiration rate over time" style="width:100%; display:block; border-radius:4px;">
-  <figcaption><em>Respiration rates constantly shift up and down over time. This is indicative of varying sleep quality and no consistent trends innately.</em></figcaption>
+  <figcaption>Respiration rates constantly shift up and down over time. This is indicative of varying sleep quality and no consistent trends innately.</figcaption>
 </figure>
 <figure class="figure">
   <img src="images/dataprep/average_sleep_stress_over_time.png" alt="Line chart of average sleep stress over time" style="width:100%; display:block; border-radius:4px;">
