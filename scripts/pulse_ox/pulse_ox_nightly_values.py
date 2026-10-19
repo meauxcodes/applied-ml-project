@@ -1,7 +1,7 @@
 import pandas as pd
 from pathlib import Path
 
-stacked_dir = Path("/Volumes/ROG Strix/eventide_data/cohort_stacked/pulse_ox")
+stacked_dir = Path("/Volumes/ROG Strix/school/eventide_data/cohort_stacked")
 sleep_pulse_ox = pd.read_csv(stacked_dir / "garmin-connect-sleep-pulse-ox.csv")
 print(sleep_pulse_ox.shape, sleep_pulse_ox.head())
 print(sleep_pulse_ox["spo2"].describe())

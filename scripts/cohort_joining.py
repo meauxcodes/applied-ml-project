@@ -12,7 +12,7 @@ cohort_labels = {
     "Sleep Savant Since Jun 29": "cohort_08",
 }
 
-stacked_dir = Path("/Volumes/ROG Strix/eventide_data/cohort_stacked")
+stacked_dir = Path("/Volumes/ROG Strix/school/eventide_data/cohort_stacked")
 
 sleep = pd.read_csv(stacked_dir / "garmin-connect-sleep-summary.csv")
 print("sleep", sleep.shape)
@@ -26,6 +26,9 @@ print("hrv", hrv.shape)
 daily = pd.read_csv(stacked_dir / "garmin-connect-daily-summary.csv")
 print("daily", daily.shape)
 
+sleep_pulse_ox = pd.read_csv(stacked_dir / "sleep_pulse_ox.csv")
+print("sleep pulse ox", sleep_pulse_ox.shape)
+
 keys = ["participant_id", "calendarDate"]
 night_keys = ["participant_id", "sleepSummaryId"]
 
@@ -34,6 +37,8 @@ sleep = sleep.drop_duplicates(subset=keys, keep="last")
 print("sleep after", sleep.shape)
 
 nightly_respiration = nightly_respiration[night_keys + ["breathsPerMinute_mean","breathsPerMinute_std", "breathsPerMinute_min", "breathsPerMinute_max"]]
+
+sleep_pulse_ox = sleep_pulse_ox[night_keys + ["spo2_mean", "spo2_std", "spo2_min", "spo2_max"]]
 
 hrv = hrv[keys + ["lastNightAvg", "lastNight5MinHigh"]]
 hrv = hrv.drop_duplicates(subset=keys, keep="last")
@@ -61,8 +66,11 @@ print("daily after", daily.shape)
 merged = sleep.merge(nightly_respiration, on=night_keys, how="inner")
 print("sleep + nightly respiration", merged.shape)
 
+merged = merged.merge(sleep_pulse_ox, on = night_keys, how = "outer")
+print("sleep + nightly respiration + sleep pulse ox")
+
 merged = merged.merge(hrv, on=keys, how="inner")
-print("sleep + nightly respiration + hrv", merged.shape)
+print("sleep + nightly respiration + sleep pulse ox + hrv", merged.shape)
 
 merged = merged.merge(daily_night, on=keys, how="inner")
 merged = merged.merge(daily_before, on=keys, how="inner")
@@ -74,21 +82,11 @@ print(merged.head())
 
 print(merged.isna().sum())
 
-# build a lookup: real ID -> anonymous code
-id_lookup = {}
-number = 1
-for real_id in merged["participant_id"].unique():
-    id_lookup[real_id] = "P" + str(number)
-    number = number + 1
-
-# apply the lookup
-merged["participant_id"] = merged["participant_id"].replace(id_lookup)
-
 # swap cohort folder names for generic labels
 merged["cohort"] = merged["cohort"].str.strip().replace(cohort_labels)
 
 
-merged.to_csv("../data/raw/cohort_joined.csv", index=False)
+merged.to_csv("/Volumes/ROG Strix/school/eventide_data/cohort_joined.csv", index=False)
 print(merged.head())
 print(merged.shape)
 print("saved")

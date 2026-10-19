@@ -20,31 +20,61 @@ print("zero steps:", (cleaned["steps"] == 0).sum())
 print("resting calories under 1000:", (cleaned["bmrKilocalories"] < 1000).sum())
 print("steps over 40000:", (cleaned["steps"] > 40000).sum())
 
+### SPLIT THE DATASET INTO with and without SPO2 data
+
+dataset_with_spo2 = cleaned
+# 
+pulse_ox_features = [
+    "spo2_mean", 
+    "spo2_std", 
+    "spo2_min", 
+    "spo2_max"
+]
+
+dataset_without_spo2 = cleaned.drop(columns = pulse_ox_features)
+
 #remove rows with blank values
-cleaned = cleaned.dropna()
-print("after dropping blanks:", cleaned.shape)
+dataset_without_spo2 = dataset_without_spo2.dropna()
+print("dataset without spo2 after dropping blanks:", dataset_without_spo2.shape)
+dataset_with_spo2 = dataset_with_spo2.dropna()
+print("dataset with spo2 after dropping blanks:", dataset_with_spo2.shape)
 
 #my methodology for cleaning this data is to only remove data that is impossible
 #only keep the rows where the average stress is real (above 0)
-cleaned = cleaned[cleaned["averageStressInStressLevel"] > 0]
-print("after dropping negative stress:", cleaned.shape)
+dataset_without_spo2 = dataset_without_spo2[dataset_without_spo2["averageStressInStressLevel"] > 0]
+print("dataset without spo2 after dropping negative stress:", dataset_without_spo2.shape)
+dataset_with_spo2 = dataset_with_spo2[dataset_with_spo2["averageStressInStressLevel"] > 0]
+print("dataset with spo2 after dropping negative stress:", dataset_with_spo2.shape)
 
 #only keep rows where HRV is real
 
-cleaned = cleaned[cleaned["lastNight5MinHigh"] > 0]
-print("after removing invalid HRV:", cleaned.shape)
+dataset_without_spo2 = dataset_without_spo2[dataset_without_spo2["lastNight5MinHigh"] > 0]
+print("dataset without spo2 after removing invalid HRV:", dataset_without_spo2.shape)
+dataset_with_spo2 = dataset_with_spo2[dataset_with_spo2["lastNight5MinHigh"] > 0]
+print("dataset with spo2 after removing invalid HRV:", dataset_with_spo2.shape)
 
 #only keep rows where the watch was worn a full day (resting calories 1,000 or more)
-cleaned = cleaned[cleaned["bmrKilocalories"] >= 1000]
-print("after removing partial days:", cleaned.shape)
+dataset_without_spo2 = dataset_without_spo2[dataset_without_spo2["bmrKilocalories"] >= 1000]
+print("dataset without spo2 after removing partial days:", dataset_without_spo2.shape)
+dataset_with_spo2 = dataset_with_spo2[dataset_with_spo2["bmrKilocalories"] >= 1000]
+print("dataset with spo2 after removing partial days:", dataset_with_spo2.shape)
 
 # 5. keep rows where daytime steps were recorded (above 0)
-cleaned = cleaned[cleaned["steps"] > 0]
-print("after removing zero-step days:", cleaned.shape)
+dataset_without_spo2 = dataset_without_spo2[dataset_without_spo2["steps"] > 0]
+print("dataset without spo2 after removing zero-step days:", dataset_without_spo2.shape)
+dataset_with_spo2 = dataset_with_spo2[dataset_with_spo2["steps"] > 0]
+print("dataset with spo2 after removing zero-step days:", dataset_with_spo2.shape)
 
-cleaned.to_csv("../data/clean/cohort_cleaned.csv", index=False)
-print("Saved")
-print("The original data has been transformed from", raw.shape, "to", cleaned.shape, "losing only", raw.shape[0] - cleaned.shape[0], "rows", "or", round((raw.shape[0] - cleaned.shape[0]) / raw.shape[0] * 100, 2), "% of the original data.")
+dataset_without_spo2.to_csv("../data/clean/dataset_without_spo2_cleaned.csv", index=False)
+print("Dataset Without SPO2 Saved")
+print("The number of participants is:", dataset_without_spo2.nunique())
+print("The original data has been transformed from", raw.shape, "to", dataset_without_spo2.shape, "losing only", raw.shape[0] - dataset_without_spo2.shape[0], "rows", "or", round((raw.shape[0] - dataset_without_spo2.shape[0]) / raw.shape[0] * 100, 2), "% of the original data.")
+
+
+dataset_with_spo2.to_csv("../data/clean/dataset_with_spo2_cleaned.csv", index=False)
+print("Dataset With SPO2 Saved")
+print("The number of participants is:", dataset_with_spo2.nunique())
+print("The original data has been transformed from", raw.shape, "to", dataset_with_spo2.shape, "losing only", raw.shape[0] - dataset_with_spo2.shape[0], "rows", "or", round((raw.shape[0] - dataset_with_spo2.shape[0]) / raw.shape[0] * 100, 2), "% of the original data.")
 
 
 data_dictionary = {
@@ -73,6 +103,10 @@ data_dictionary = {
     "breathsPerMinute_std": ["How much breathing varied during sleep","breaths per minute"],
     "breathsPerMinute_min": ["Lowest breathing rate during sleep","breaths per minute"],
     "breathsPerMinute_max": ["Highest breathing rate during sleep","breaths per minute"],
+    "spo2_mean":["Average nightly SpO2 value","% SpO2"],
+    "spo2_std":["How much blood oxygen content varied during sleep","% points"],
+    "spo2_min":["Minimum nightly SpO2 value","% SpO2"],
+    "spo2_max":["Maximum nightly SpO2 value","% SpO2"]
 }
 
 # build one row per column in the cleaned table

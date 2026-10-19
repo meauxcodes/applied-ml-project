@@ -2,20 +2,18 @@ from pathlib import Path
 import pandas as pd
 
 
-cohort_exports_dir = Path("/Volumes/ROG Strix/eventide_data/cohort_exports")
+cohort_exports_dir = Path("/Volumes/ROG Strix/school/eventide_data/cohort_exports")
 
 wanted_data_types = [
-    #"questionnaire",
     "garmin-connect-sleep-summary",##
     "garmin-connect-sleep-stage", ##
     "garmin-connect-hrv-summary", ##
     "garmin-connect-stress",##
     "garmin-connect-respiration",
     "garmin-connect-sleep-respiration",
-    #"garmin-connect-pulse-ox",
-    #"garmin-connect-sleep-pulse-ox",
     "garmin-connect-daily-summary", ##
     "garmin-connect-user-metrics",
+    "garmin-connect-sleep-pulse-ox"
 ]
 
 # NEW: one empty list per data type, made once, before any loop
@@ -53,7 +51,7 @@ print("files read:", count, "| dropped:", dropped)
 for name in tables:
     print(name, len(tables[name]))
 
-output_dir = Path("/Volumes/ROG Strix/eventide_data/cohort_stacked")
+output_dir = Path("/Volumes/ROG Strix/school/eventide_data/cohort_stacked")
 output_dir.mkdir(parents=True, exist_ok=True)      # make the folder if it isn't there
 
 for name in tables:

@@ -1,7 +1,7 @@
 import pandas as pd
 from pathlib import Path
 
-stacked_dir = Path("/Volumes/ROG Strix/eventide_data/cohort_stacked")
+stacked_dir = Path("/Volumes/ROG Strix/school/eventide_data/cohort_stacked")
 sleep_respiration = pd.read_csv(stacked_dir / "garmin-connect-sleep-respiration.csv")
 print(sleep_respiration.shape, sleep_respiration.head())
 print(sleep_respiration["breathsPerMinute"].describe())
