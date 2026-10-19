@@ -1,9 +1,18 @@
 import subprocess
-    
-subprocess.run(["python", "garmin_pull.py"])
-subprocess.run(["python", "garmin_clean.py"])
-subprocess.run(["python", "visualizations.py"])
-subprocess.run(["python", "cohort_stacking.py"])
-subprocess.run(["python", "cohort_respiration.py"])
-subprocess.run(["python", "cohort_joining.py"])
-subprocess.run(["python", "cohort_cleaning.py"])
+import sys
+
+scripts = [
+    "cohort_stacking.py",
+    "cohort_respiration.py",
+    "pulse_ox/pulse_ox_nightly_values.py",
+    "cohort_joining.py",
+    "deidentify.py",
+    "cohort_cleaning.py",
+]
+
+for script in scripts:
+    result = subprocess.run(["python", script])
+    if result.returncode != 0:
+        print(f"Error: {script} failed")
+        sys.exit(1)
+
