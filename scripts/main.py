@@ -8,6 +8,7 @@ scripts = [
     "cohort_joining.py",
     "deidentify.py",
     "cohort_cleaning.py",
+    "labelling.py"
 ]
 
 for script in scripts:
