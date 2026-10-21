@@ -1,6 +1,4 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 
 dataset_with_spo2 = pd.read_csv("../data/clean/dataset_with_spo2_cleaned.csv")
 dataset_without_spo2 = pd.read_csv("../data/clean/dataset_without_spo2_cleaned.csv")
