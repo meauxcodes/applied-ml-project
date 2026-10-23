@@ -22,7 +22,7 @@ nb_answer_key = [
 ]
 print(f"Percent of nights where hrv is at or below 20% of an individual's normal: {((dataset_without_spo2["hrv_ratio"]<=.8).sum()/len(dataset_without_spo2)*100).round(3)}%")
 dataset_without_spo2 = dataset_without_spo2.drop(columns = nb_answer_key)
-dataset_without_spo2.to_csv("../data/clean/nb_labeled.csv", index = False)
+dataset_without_spo2.to_csv("../data/clean/naivebayes/nb_labeled.csv", index = False)
 
 ### Remove the answer key (low oxygen)
 
@@ -35,4 +35,4 @@ dt_answer_key = [
 ]
 print(f"Percent of nights where spo2 is at or below -1 z: {((dataset_with_spo2["spo2_z"]<=-1).sum()/len(dataset_with_spo2)*100).round(3)}%")
 dataset_with_spo2 = dataset_with_spo2.drop(columns = dt_answer_key)
-dataset_with_spo2.to_csv("../data/clean/dt_labeled.csv", index = False)
+dataset_with_spo2.to_csv("../data/clean/decisiontree/dt_labeled.csv", index = False)
