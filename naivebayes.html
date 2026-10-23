@@ -84,19 +84,19 @@
     </div>
     <figure class="figure">
       <img src="images/naivebayes/naive_bayes_labelled_data.png" alt="Sample rows of the labeled Naive Bayes dataset with the low_recovery label column" style="width:100%; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This is a sample of the labeled data which has been transposed for visibility purposes and limited to the first eight observations, all from participant P1. The "low_recovery" field at the bottom is the label for this dataset that the model aims to learn how to predict. Durations are in milliseconds.</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/naivebayes/nb_correlation_heatmap.png" alt="Correlation heatmap of the Naive Bayes features in the training set" style="width:100%; max-width:760px; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This correlation heatmap covers the 20 features from the training set. Of all correlations, only three pairs were above the 0.75 threshold: total sleep and light sleep (0.82), mean and max breathing rate (0.76), and resting and minimum heart rate (0.87). As a result, one column from each of these three pairs was removed from both the training and testing sets, leaving 17 features.</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/naivebayes/nb_training_data.png" alt="Sample rows of the Naive Bayes training set" style="width:100%; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This is a sample of the training data, which has been transposed for visibility purposes and limited to the first eight observations. This data subset contains 15,003 observations across 79 people. The identifiers and the three columns above the 0.75 correlation threshold were removed, leaving 17 features plus "low_recovery."</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/naivebayes/nb_testing_data.png" alt="Sample rows of the Naive Bayes testing set" style="width:100%; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This is a sample of the testing data, which has been transposed for visibility purposes and limited to the first eight observations. This data subset contains 3,725 observations across 19 people with 17 features plus "low_recovery." None of these 19 people appear in the training set.</figcaption>
     </figure>
   </div>
 
@@ -113,11 +113,11 @@
     <p>Discussion, description, and visualization of results, parameter choices, and what the results mean with respect to the topic.</p>
     <figure class="figure">
       <img src="images/naivebayes/multinomial_confusion_matrix.png" alt="Confusion matrix for Multinomial Naive Bayes on the testing set: 3067, 277, 226, 155" style="width:100%; max-width:560px; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>The confusion matrix shows the Multinomial Naive Bayes predictions for the 3,725 nights in the testing set. While the accuracy of 86.5% is below the baseline accuracy of 89.8% if the model simply predicted not low-recovery for every single night, the model's recall of 41% shows that roughly four out of every 10 low-recovery nights were correctly flagged.</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/naivebayes/gaussian_confusion_matrix.png" alt="Confusion matrix for Gaussian Naive Bayes on the testing set: 3102, 242, 251, 130" style="width:100%; max-width:560px; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>The confusion matrix shows the Gaussian Naive Bayes predictions, also for the 3,725 nights in the testing set. Accuracy was slightly higher than the Multinomial model at 86.8%, but the model caught fewer low-recovery nights, with a recall of 34% (130 out of 381), and raised 242 false alarms.</figcaption>
     </figure>
   </div>
 </div>
