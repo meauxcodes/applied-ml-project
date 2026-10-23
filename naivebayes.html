@@ -63,7 +63,10 @@
 
   <div class="method-section">
     <span class="tag">Overview</span>
-    <p>Short, non-technical-adjacent explanation of Naive Bayes: how it works conceptually, and what it will be used for with respect to the topic and data.</p>
+    <p>Naive Bayes is a method of classification that takes Bayes' theorem and uses it to predict the most probable class label for any new observation. This process is based on the distribution of features that occur in each class from the training data. It starts with a guess of how common each class is, and then evidence from each feature is compiled and assembled to make predictions. The "naive" assumption is that for any given class label, every feature is treated as independent of each other. So no matter how closely correlated a single feature is to any other, their probabilities are counted independently. This is a potential problem, since two features that are closely related both count in favor of that class label, raising the confidence level for that class label. For instance, in this project's dataset, heart rate and stress are closely related, since Garmin calculates its stress score from heart rate data, specifically the timing between heartbeats. In Naive Bayes, both of those features count independently. Despite this nuance, Naive Bayes is still widely used because it is simple to implement, fast to calculate, and it has a history of performing remarkably well even when its independence assumption is not true.</p>
+    <p>Outside of this project's aims, Naive Bayes has many real-world uses, to include examples like spam detection, where the content of emails is scanned for repetitive use of words highly correlated with spam. Another great example is network intrusion detection, where Naive Bayes is implemented to analyze network traffic and determine if it is indicative of normal use or a potential attack.</p>
+    <p>There are a couple of types of Naive Bayes to be aware of: multinomial and Bernoulli. Multinomial Naive Bayes works in terms of counts, like how many times a given word appears in an email. Bernoulli, on the other hand, works with yes/no or True/False features, such as whether each word appears at all. For example, in spam detection the word "free" is a key indicator of spam. Bernoulli would only care that the word "free" is present at all, no matter how many times that word appears in the email. Multinomial would count each time "free" is repeated and build up evidence, so that an email that says "free free free" would lean more in the camp of spam. Another point of consideration is the meaning of the words. Certain words are more indicative of spam than others. While the word "free" does have a high correlation with spam emails, it is also a common everyday word. For example, a student may ask their group partner, "Hey, are you free this weekend to go over the current status of our project?" That has a totally different meaning than a spam email saying, "Respond to this email for a free car!" Neither model really can understand the meaning of the word "free" in each email. Both also ignore the order of the words. Each, however, would only tell them apart from the other words in the email, like "weekend" or "project" versus "respond" or "car."</p>
+    <p>Lastly, in order to use a multinomial approach in this project, "binning" is likely the necessary approach. Since the data is continuous, features like heart rate would need to be transformed from individual numbers to categories like low, medium or high. A third type, Gaussian Naive Bayes, is designed for continuous measurements, so it could directly use this project's data without any binning or scaling.</p>
     <figure class="figure">
   <div class="ph">[ image placeholder ]</div>
   <figcaption>Diagram or illustration supporting the Naive Bayes overview.</figcaption>
@@ -73,9 +76,11 @@
   <div class="method-section">
     <span class="tag">Data</span>
     <p>Small image of the prepared dataset(s) used specifically for Naive Bayes, plus links to both the raw and cleaned data.</p>
+    <p>Multinomial Naive Bayes was required for this project, although seeing as Gaussian Naive Bayes was designed to analyze continuous variables directly, that method may be better suited to this dataset. Since Multinomial NB is built for count data, each continuous feature had to be converted into count-like indicators. SKLearn's KBinsDiscretizer was used to split each feature into low, medium, and high bins, with each bin becoming its own 0 or 1 column. The two exercise-duration features received only two bins because many nights recorded zero minutes. One empty bin was removed from each of those two features, so the resulting number of binned features came out to be 49. Bin edges were determined by the quantile strategy, so each bin held roughly the same number of nights. Equal-width bins were not used because features such as daily steps are skewed. This would have forced most observations into a single bin and would have left that feature with little ability to distinguish between observations. Bin edges were learned from the training set only and then applied to the test set, so the test set had no influence on the modeling process. This allowed testing observations to go unseen and ensured that the model's accuracy is a reflection of its performance on observations it has never encountered.</p>
     <div class="linkrow">
-      <a href="#">Raw data — link</a>
-      <a href="#">Cleaned data — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/nb_labeled.csv" target="_blank">Labeled data (nb_labeled.csv) — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/nb_train.csv" target="_blank">Training set (nb_train.csv) — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/nb_test.csv" target="_blank">Testing set (nb_test.csv) — link</a>
     </div>
     <figure class="figure">
   <div class="ph">[ image placeholder ]</div>
@@ -87,7 +92,7 @@
     <span class="tag">Code</span>
     <p>Language and core packages used — link to the code itself. Do not paste code directly onto the page.</p>
     <div class="linkrow">
-      <a href="#">Naive Bayes code — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/scripts/notebooks/naive_bayes.ipynb" target="_blank">Naive Bayes code (naive_bayes.ipynb) — link</a>
     </div>
   </div>
 
