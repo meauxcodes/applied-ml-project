@@ -75,7 +75,7 @@
 
   <div class="method-section">
     <span class="tag">Data</span>
-    <p>Small image of the prepared dataset(s) used specifically for Naive Bayes, plus links to both the raw and cleaned data.</p>
+    <p>Naive Bayes is a supervised learning model. That means the model learns from examples where the answer is already known, and its predictions are later checked against an answer key. For example, if a kid learning to do addition never knew if the answers they were generating were correct, they would never have confidence in their understanding. Likewise, models like Naive Bayes need an answer key to solidify the rules they come up with and to provide confidence in their predictions moving forward. For the train/test split, the data was split among participants so that nobody was in both data sets, because every person has a unique signature in their individual metrics. By having a person's nights in both, the model could get insight into the test's answer key. Using StratifiedGroupKFold, the participants were separated into groupings close to an 80/20 split, while keeping the share of low-recovery nights about the same in both sets. A random state of 42 was used so that the experiment was reproducible and did not produce a different split every time it was run. The training set contains 15,003 nights from 79 people, and the testing set contains 3,725 nights from 19 people, with about 10% of nights labeled low recovery in each.</p>
     <p>Multinomial Naive Bayes was required for this project, although seeing as Gaussian Naive Bayes was designed to analyze continuous variables directly, that method may be better suited to this dataset. Since Multinomial NB is built for count data, each continuous feature had to be converted into count-like indicators. SKLearn's KBinsDiscretizer was used to split each feature into low, medium, and high bins, with each bin becoming its own 0 or 1 column. The two exercise-duration features received only two bins because many nights recorded zero minutes. One empty bin was removed from each of those two features, so the resulting number of binned features came out to be 49. Bin edges were determined by the quantile strategy, so each bin held roughly the same number of nights. Equal-width bins were not used because features such as daily steps are skewed. This would have forced most observations into a single bin and would have left that feature with little ability to distinguish between observations. Bin edges were learned from the training set only and then applied to the test set, so the test set had no influence on the modeling process. This allowed testing observations to go unseen and ensured that the model's accuracy is a reflection of its performance on observations it has never encountered.</p>
     <div class="linkrow">
       <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/nb_labeled.csv" target="_blank">Labeled data (nb_labeled.csv) — link</a>
@@ -102,7 +102,7 @@
 
   <div class="method-section">
     <span class="tag">Code</span>
-    <p>Language and core packages used — link to the code itself. Do not paste code directly onto the page.</p>
+    <p>The code for this section was written in Python using pandas, NumPy, seaborn, matplotlib, and scikit-learn (sklearn). Pandas and NumPy were used primarily for dataframe management, matplotlib and seaborn were used for plotting figures, and sklearn was used for the train/test split, binning, both Naive Bayes models, and metric reporting.</p>
     <div class="linkrow">
       <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/scripts/notebooks/naive_bayes.ipynb" target="_blank">Naive Bayes code (naive_bayes.ipynb) — link</a>
     </div>
@@ -110,7 +110,7 @@
 
   <div class="method-section">
     <span class="tag">Results</span>
-    <p>Discussion, description, and visualization of results, parameter choices, and what the results mean with respect to the topic.</p>
+    <p>On accuracy alone, neither model performed particularly well against the do-nothing baseline. The baseline says that if, for every observation, a prediction of "normal recovery" was made, then it would be correct 3,344 out of 3,725 nights (89.8%), since only 381 out of 3,725 nights are actually labeled as "low-recovery." Multinomial achieved an accuracy of only 86.5%, while Gaussian achieved an accuracy of 86.8%. However, when looking at balanced accuracy, both models beat chance, with Multinomial at 66% and Gaussian at 63% against a 50% baseline. Simply put, the Multinomial model performs better than guessing: it caught about 4 in 10 low-recovery nights, and about 1 in 3 of the nights it flagged were truly low-recovery. The Gaussian model achieved a slightly higher accuracy score but caught fewer low-recovery nights than Multinomial (34% recall against 41%).</p>
     <figure class="figure">
       <img src="images/naivebayes/multinomial_confusion_matrix.png" alt="Confusion matrix for Multinomial Naive Bayes on the testing set: 3067, 277, 226, 155" style="width:100%; max-width:560px; margin:0 auto; display:block; border-radius:4px;">
       <figcaption>The confusion matrix shows the Multinomial Naive Bayes predictions for the 3,725 nights in the testing set. While the accuracy of 86.5% is below the baseline accuracy of 89.8% if the model simply predicted not low-recovery for every single night, the model's recall of 41% shows that roughly four out of every 10 low-recovery nights were correctly flagged.</figcaption>
@@ -119,6 +119,11 @@
       <img src="images/naivebayes/gaussian_confusion_matrix.png" alt="Confusion matrix for Gaussian Naive Bayes on the testing set: 3102, 242, 251, 130" style="width:100%; max-width:560px; margin:0 auto; display:block; border-radius:4px;">
       <figcaption>The confusion matrix shows the Gaussian Naive Bayes predictions, also for the 3,725 nights in the testing set. Accuracy was slightly higher than the Multinomial model at 86.8%, but the model caught fewer low-recovery nights, with a recall of 34% (130 out of 381), and raised 242 false alarms.</figcaption>
     </figure>
+  </div>
+
+  <div class="method-section">
+    <span class="tag">Conclusions</span>
+    <p>The watch data collected provides some indications about the nights that were labeled as low recovery, but did not provide enough to spot a low-recovery night with reliable accuracy. Most of the low-recovery nights were not captured by the model, and most of the nights that were flagged turned out to be false alarms. One probable reason for this phenomenon is that a lot of what affects recovery on any given day is never really captured by a wearable. Some of these categories could be the mental load of the day, emotional responses to a given day's events, illness, or even alcohol usage. The wearable's stress scores are a reflection of an individual's heart rhythm, but they cannot tell the difference between a hard workout and a really stressful conversation. That aside, these tools could still be useful, capable of pointing a spotlight at a potential problem area or drawing attention to individual days that may be worth another look. However, they should not be used to make definitive claims about an individual's metrics or to conclude that certain factors cause certain results, since the findings show association rather than cause, and the low-recovery label is only an estimate based on heart rate variability rather than a clinical diagnosis.</p>
   </div>
 </div>
 
