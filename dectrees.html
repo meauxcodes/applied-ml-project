@@ -54,12 +54,6 @@
 <main class="shell">
 
 <div class="prose">
-  <div class="tk">
-  <span class="tk-label">To fill in — Module 3</span>
-  <ul>
-<li>This tab is not covered until Module 3. Leave as a stub until then.</li>
-  </ul>
-</div>
 
   <div class="method-section">
     <span class="tag">Overview</span>
@@ -70,11 +64,11 @@
     <p>When working with continuous numbers, the possibilities are endless. There are an infinite number of numbers between 0 and 1. Say the tree is looking to split the data based on minimum heart rate. In the above example, the split was made at 53.5. The tree could theoretically try to split hairs at every decimal place: 53.6, 53.7, 53.71, and so on. This could result in infinite trees. Also, the more features in a dataset, the more possible combinations of features exist. Checking all those combinations causes the possibilities of each tree to grow exponentially.</p>
     <figure class="figure">
       <img src="images/dectrees/dropped_tree3_plot.png" alt="Decision Tree 3: entropy, depth 3, showing questions at each node down to the leaf nodes" style="width:100%; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This plot is a visual representation of Decision Tree 3, which was based on the entropy criterion, a depth of 3, and no BMR in the dataset. Each box in the tree shows its splitting question, the share of nights it represents, and its class mixture. Orange boxes lean toward a normal label, while blue boxes lean toward a low-oxygen label. Deeper colors mean a purer box.</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/dectrees/tree1_first_split.png" alt="Close-up of the first split in Tree 1: minimum heart rate at or below 53.5, entropy 1.0 splitting into boxes with entropy 0.798 and 0.945" style="width:100%; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This plot is a close-up of the first split in Decision Tree 1, in which the initial question is "minimum heart rate &lt;= 53.5?" The top box has an entropy of 1.0, a perfect 50/50 mix, because class_weight = "balanced" makes both classes count equally. The yes side holds 47.1% of the nights with an entropy of 0.798, and the no side holds 52.9% of the nights with an entropy of 0.945. As a result, information gain is calculated as 1.0 − (0.471 × 0.798 + 0.529 × 0.945) ≈ 0.12.</figcaption>
     </figure>
   </div>
 
@@ -82,7 +76,7 @@
     <span class="tag">Data</span>
     <p>The Decision Tree dataset is based on a completely different label than Naive Bayes. While Naive Bayes was focused on normal vs. low-recovery nights, Decision Trees focused on normal vs. low-oxygen nights. Because the low-oxygen label was determined using pulse-ox data (SpO2), and only a subset of the original data contained pulse-ox data, the number of observations shrank from 18,728 nights in Naive Bayes down to 8,729 nights. Naive Bayes contained all 98 participants, whereas Decision Trees contained 47.</p>
     <p>For the labeling of the Decision Tree data, the average SpO2 score for the entire sample population was recorded. Then, for each night, that night's SpO2 was compared to that population average, and a z-score was calculated for that specific night. If that z-score fell one standard deviation or more below the average (z ≤ −1), that specific observation was labeled as low-oxygen.</p>
-    <p>This was done because of the implications of how low HRV differs from low oxygen. HRV and what is normal varies widely from person to person. There's no recognized standard for low or high HRV, and it is highly dependent on the individual, since HRV tends to be higher in more physically fit individuals. On the flip side, pulse-ox data does have what's considered to be low in the medical field. However, wrist-worn devices like Garmin's are not clinical-grade and tend to read low, so a medical cutoff would not translate directly to this data. Instead of a globally accepted value, and in an attempt to meet project goals and evaluate across this subset of the veteran community, the average SpO2 of this subset was calculated and used as the baseline for determining a z-score for each observation.</p>
+    <p>This was done because of the implications of how low HRV differs from low oxygen. HRV and what is normal varies widely from person to person. There's no recognized standard for low or high HRV, and it is highly dependent on the individual, since HRV tends to be higher in more physically fit individuals. On the flip side, pulse-ox data does have what's considered to be low in the medical field. However, wrist-worn devices like Garmin's are not clinical-grade and tend to read low [1], so a medical cutoff would not translate directly to this data. Instead of a globally accepted value, and in an attempt to meet project goals and evaluate across this subset of the veteran community, the average SpO2 of this subset was calculated and used as the baseline for determining a z-score for each observation.</p>
     <p>Decision Trees, like Naive Bayes, is also a supervised learning model, meaning the model learns from examples where the answer is already known. Just like in the Naive Bayes tab, if a kid learning to do addition never knew if the answers they were generating were correct, they would never have confidence in their understanding. Likewise, models like Decision Trees need that answer key to solidify the rules they come up with and to provide confidence in their predictions moving forward. For the train/test split, the data was split among participants so that nobody was in both data sets, because every person has a unique signature in their individual metrics. By having a person's nights in both, the model could get insight into the test's answer key. Using StratifiedGroupKFold, the participants were separated into groupings close to an 80/20 split. This time, however, an equal share of labeled data was not achievable. Since a majority of the low-oxygen nights were concentrated in a few participants, splitting participants in a way that kept the share of low-oxygen nights equal was not possible. For example, say there are 10 bags, each with a mix of red and blue marbles. Next, say that 7 of the bags are mostly pure blue, and the three remaining bags are 60%, 50%, and 30% red. When the ten bags are split 80/20 (8 bags for training and 2 for testing), the share of red marbles in each set depends heavily on where those three bags land, so there would be no way to get the training set and the testing set to have a similar percentage of red marbles. A random state of 42 was used so that the experiment was reproducible and did not produce a different split every time it was run. The training set contains 7,029 nights from 35 people, with 15.7% of nights labeled low oxygen, and the testing set contains 1,700 nights from 12 people, with 12.5% of nights labeled low oxygen.</p>
     <p>Decision trees are not affected by correlation or scaling. Since each question is asked within its own feature, scaling wouldn't change the outcome of the question, only how the question is asked. Secondly, where Naive Bayes double counted correlated columns as further evidence toward a classification, in a decision tree, columns are evaluated one at a time at each split, so if two columns carry the same information, the tree simply uses one and the other goes mostly unused.</p>
     <p>Plots of the trees were made after all three trees were calculated and run. This turned out to be a bit of an efficiency mistake. After looking at the plots, it was clear that the root of the tree was splitting based on basal metabolic rate (BMR). This variable is unique to an individual and rarely changes. Essentially, the tree was splitting the data primarily on a person's unique signature, which said nothing about the night itself. After this oversight was realized, the decision was made to remove BMR completely from the training and testing data sets. The original data and trees were kept as a teaching point instead of going back and removing BMR at the beginning. This allows any future observers to understand the complete thought process behind the decisions that were made. After BMR was removed, the tree began primarily splitting on minimum heart rate instead.</p>
@@ -93,15 +87,15 @@
     </div>
     <figure class="figure">
       <img src="images/dectrees/dt_labeled_data.png" alt="Sample rows of the labeled Decision Tree dataset with the low_oxygen label column" style="width:100%; max-width:100%; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This is a sample of the labeled data which has been transposed for visibility purposes and limited to the first eight observations, all from participant P2. The "low_oxygen" field at the bottom is the label for this dataset that the model aims to learn how to predict. Durations are in milliseconds.</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/dectrees/dt_training_data.png" alt="Sample rows of the Decision Tree training set" style="width:100%; max-width:100%; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This is a sample of the training data, which has been transposed for visibility purposes and limited to the first eight observations. This data subset contains 7,029 observations across 35 people. The identifiers and BMR were removed, leaving 21 features plus "low_oxygen."</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/dectrees/dt_testing_data.png" alt="Sample rows of the Decision Tree testing set" style="width:100%; max-width:100%; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This is a sample of the testing data, which has been transposed for visibility purposes and limited to the first eight observations. This data subset contains 1,700 observations across 12 people with 21 features plus "low_oxygen." None of these 12 people appear in the training set.</figcaption>
     </figure>
   </div>
 
@@ -119,31 +113,27 @@
     <p>Looking at the importance metrics, minimum heart rate led the group with 0.48, followed by vigorous exercise at 0.24 and resting heart rate at 0.08. This means that minimum heart rate and vigorous exercise together accounted for 72% of Tree 1's feature importance. Minimum heart rate, or anything heart-rate related, changes daily and can be affected by multiple things: physical fitness levels, alcohol consumption, sleep debt, and so on. This feature can also vary widely between individuals. Because this feature reflects both the individual and a given night, its role as the primary separator can't be completely relied upon as reflecting changes between nights. Some of that importance is still likely to reflect differences between people, not just nights.</p>
     <figure class="figure">
       <img src="images/dectrees/decision_tree_confusion_matrix.png" alt="Confusion matrix for the first tuned tree, which included bmrKilocalories" style="width:100%; max-width:560px; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This confusion matrix shows Tree 1 with BMR included (entropy, depth 4, leaf 20). This model caught 38 of 213 low-oxygen nights, missed 175, raised 484 false alarms, and made 1,003 correct "normal" predictions. The balanced accuracy was 0.43, which is worse than a coin flip, so this model is not recommended.</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/dectrees/dropped_tree1_plot.png" alt="Tree 1: entropy, depth 5, minimum leaf size 500, without bmrKilocalories" style="width:100%; max-width:100%; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This plot shows Tree 1 with no BMR included (entropy, depth 5, leaf 500). The first question is minimum heart rate ≤ 53.5. On the high side, the next question is vigorous exercise ≤ 30,000 ms (30 seconds). Every bottom box holds at least 500 training nights.</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/dectrees/dropped_decision_tree_confusion_matrix.png" alt="Confusion matrix for Tree 1 without bmrKilocalories" style="width:100%; max-width:560px; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This confusion matrix shows Tree 1 with no BMR (entropy, depth 5, leaf 500). This model caught 162 of 213 low-oxygen nights, missed 51, raised 626 false alarms, and made 861 correct "normal" predictions. The balanced accuracy was 0.67, which ultimately proved it to be the best of the three trees.</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/dectrees/dropped_tree2_plot.png" alt="Tree 2: Gini, depth 3, without bmrKilocalories" style="width:100%; max-width:100%; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This plot shows Tree 2 (no BMR; Gini, depth 3), with the same first question as Tree 1 (minimum heart rate ≤ 53.5). The next questions asked are about resting heart rate and vigorous exercise. This tree was shallower, with only 8 bottom boxes.</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/dectrees/dropped_decision_tree2_confusion_matrix.png" alt="Confusion matrix for Tree 2" style="width:100%; max-width:560px; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
-    </figure>
-    <figure class="figure">
-      <img src="images/dectrees/dropped_tree3_plot.png" alt="Tree 3: entropy, depth 3, without bmrKilocalories" style="width:100%; max-width:100%; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This confusion matrix shows Tree 2 (no BMR; Gini, depth 3). This model caught 102 of 213 low-oxygen nights, missed 111, raised 536 false alarms, and made 951 correct "normal" predictions. The balanced accuracy was 0.56, which is barely better than a coin flip.</figcaption>
     </figure>
     <figure class="figure">
       <img src="images/dectrees/dropped_decision_tree3_confusion_matrix.png" alt="Confusion matrix for Tree 3" style="width:100%; max-width:560px; margin:0 auto; display:block; border-radius:4px;">
-      <figcaption>[Caption to be written]</figcaption>
+      <figcaption>This confusion matrix shows Tree 3 (no BMR; entropy, depth 3), which caught 94 of 213 low-oxygen nights, missed 119, raised 429 false alarms, and made 1,058 correct "normal" predictions. The balanced accuracy was 0.58, which, again, is barely better than a coin flip, so this model is not recommended.</figcaption>
     </figure>
   </div>
 
@@ -151,6 +141,11 @@
     <span class="tag">Conclusions</span>
     <p>It is possible for these watches to spot low-oxygen nights, but not with any reliability on a consistent basis. The best tree caught most of the low-oxygen nights, but with many false alarms along the way. When a tree is trying to make decisions based on unique features of an individual, it does a bad job comparing the nights themselves to other people's nights, and it gets laser-focused on the type of individual as a predictive measure. Once that was corrected, the tree was able to focus more on the nights themselves. A tool like this could be used to inform individuals of a pattern spotted in their data and prompt a closer look or a conversation, but it should not be used as a diagnostic tool or to make any definitive claims, since the low-oxygen label is an estimate based on a consumer watch's readings rather than a clinical measurement.</p>
   </div>
+
+  <h3>References</h3>
+  <ol style="font-size: 0.85em; color: #666;">
+    <li id="ref1">P. Weinrauch, "Accuracy of pulse oximetry using the Garmin f&#275;nix&reg; 6 Pro watch," <em>The Journal of High Threat and Austere Medicine</em>, vol. 5, no. 2, pp. 3&ndash;6, 2023. doi: <a href="https://doi.org/10.33235/JHTAM.5.2.3-6" target="_blank">10.33235/JHTAM.5.2.3-6</a>.</li>
+  </ol>
 </div>
 
 </main>
