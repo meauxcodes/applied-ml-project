@@ -7,6 +7,52 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,620&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+  .figure img { cursor: pointer; transition: opacity 0.15s; }
+  .figure img:hover { opacity: 0.85; }
+  #lightbox-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    cursor: zoom-out;
+  }
+  #lightbox-overlay.open { display: flex; }
+  #lightbox-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: default;
+  }
+  #lightbox-content img {
+    max-width: 100%;
+    max-height: 75vh;
+    border-radius: 4px;
+    cursor: default;
+  }
+  #lightbox-caption {
+    color: #EDEFF5;
+    margin-top: 14px;
+    text-align: center;
+    max-width: 700px;
+    font-size: 0.95em;
+  }
+  #lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 28px;
+    color: #EDEFF5;
+    font-size: 2em;
+    cursor: pointer;
+    line-height: 1;
+  }
+</style>
 </head>
 <body>
 
@@ -80,7 +126,7 @@
   
 <p>The primary dataset for this project comes from 98 individuals, either veterans or immediate family members of veterans, who each took part in a Sleep Savant Program hosted by Elpis Alliance. Their Garmin watches recorded daily physiological data, which flows into LabFront, a platform that consolidates it. Participants in the program were either provided a Garmin watch by Elpis Alliance or brought their own Garmin device. After cleaning, the dataset contains 18,728 nights recorded between February 28, 2025 and September 28, 2026. Only 250 nights, out of an original 18,978, were removed because of missing or impossible data (e.g., HRV readings of zero). Before the receipt of the larger cohort dataset, single participant data was used for exploratory data analysis and to get a basic understanding of possible trends in the data. It was also used to formulate this project's research questions. One of the main issues with single participant data is that it is very possible that this subset doesn't reflect the whole population this project seeks to study. Using this data in a vacuum to draw conclusions and make assumptions puts the research at risk. Even 98 individuals is not truly representative of the veteran population. These individuals were invited, or sought out the program on their own, often because of their own sleep struggles. The group is a mix of people from within the veteran community. Some are active duty and some are retired, and others are family members of veterans. Ages span a wide range, and the group includes people with a sleep apnea diagnosis as well as people with no sleep issues at all, though individual ages and diagnoses were not shared with this project. Not everyone in the military community struggles with sleep, but understanding general trends is valuable for anyone who begins to exhibit sleep issues, which is what this project is all about.</p>
 
-<p>This project analyzes two different signals that indicate difficult nights: poor recovery and low blood oxygen levels. Recovery is highly individual. Every person's HRV scores vary pretty widely from person to person [8]. While higher HRV generally signals better recovery, there's no set standard to compare the target population to. Therefore, each night was compared to that individual's own average. Blood oxygen content, however, does not differ as much between people, and there is a generally understood standard for normal blood oxygen content. Rather than medical standards, the average for the population was used for comparison. This was for two reasons. First, one goal of this project is to look at how these metrics compare across the veteran population, or at least this subset. Second, the watches are not the most consistent or accurate at measuring blood oxygen content, so using the sample population as a baseline helps account for the less-than-perfect hardware.</p>
+<p>This project analyzes two different signals that indicate difficult nights: poor recovery and low blood oxygen levels. Recovery is highly individual. Every person's HRV scores vary pretty widely from person to person [8]. While higher HRV generally signals better recovery, there's no set standard to compare the target population to [8]. Therefore, each night was compared to that individual's own average. Blood oxygen content, however, does not change much from person to person across the general population, with healthy individuals typically ranging from 95% to 100% [9], which is why there is a clinically recognized level for low blood oxygen. Rather than medical standards, the average for the population was used for comparison. This was for two reasons. First, one goal of this project is to look at how these metrics compare across the veteran population, or at least this subset. Second, the watches are not the most consistent or accurate at measuring blood oxygen content [10], so using the sample population as a baseline helps account for the less-than-perfect hardware.</p>
 
   <h3>References</h3>
   <ol style="font-size: 0.85em; color: #666;">
@@ -92,6 +138,8 @@
     <li id="ref6">M. Jackson, B. J. Becerra, C. Marmolejo, R. M. Avina, N. Henley, and M. B. Becerra, "Prevalence and Correlates of Sleep Apnea Among US Male Veterans, 2005&ndash;2014," <em>Preventing Chronic Disease</em>, vol. 14, 2017. doi: <a href="https://doi.org/10.5888/pcd14.160365" target="_blank">10.5888/pcd14.160365</a>.</li>
     <li id="ref7">U.S. Department of Veterans Affairs and Department of Defense, "VA/DoD Clinical Practice Guideline for the Management of Chronic Insomnia Disorder and Obstructive Sleep Apnea," Version 3.0, 2025. [Online]. Available: <a href="https://www.healthquality.va.gov/guidelines/CD/insomnia/I-OSA-CPG_2025-Guideline_final_20250915.pdf" target="_blank">link</a>.</li>
     <li id="ref8">F. Shaffer and J. P. Ginsberg, "An Overview of Heart Rate Variability Metrics and Norms," <em>Frontiers in Public Health</em>, vol. 5, art. 258, 2017. doi: <a href="https://doi.org/10.3389/fpubh.2017.00258" target="_blank">10.3389/fpubh.2017.00258</a>.</li>
+    <li id="ref9">M. Brewster, C. Heinzmann, and S. Sharma, "Oxygen Saturation," in <em>StatPearls</em>. Treasure Island, FL, USA: StatPearls Publishing, 2026. [Online]. Available: <a href="https://www.ncbi.nlm.nih.gov/books/NBK525974/" target="_blank">https://www.ncbi.nlm.nih.gov/books/NBK525974/</a>. [Accessed: Oct. 27, 2026].</li>
+    <li id="ref10">P. Weinrauch, "Accuracy of pulse oximetry using the Garmin f&#275;nix&reg; 6 Pro watch," <em>The Journal of High Threat and Austere Medicine</em>, vol. 5, no. 2, pp. 3&ndash;6, 2023. doi: <a href="https://doi.org/10.33235/JHTAM.5.2.3-6" target="_blank">10.33235/JHTAM.5.2.3-6</a>.</li>
   </ol>
 </div>
 
@@ -196,5 +244,32 @@
   frame();
 })();
 </script>
+<script>
+function openLightbox(imgEl) {
+  var figure = imgEl.closest('figure');
+  var caption = figure ? figure.querySelector('figcaption') : null;
+  document.getElementById('lightbox-img').src = imgEl.src;
+  document.getElementById('lightbox-img').alt = imgEl.alt;
+  document.getElementById('lightbox-caption').textContent = caption ? caption.textContent : '';
+  document.getElementById('lightbox-overlay').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox-overlay').classList.remove('open');
+}
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeLightbox();
+});
+document.querySelectorAll('.figure img').forEach(function(img){
+  img.addEventListener('click', function(){ openLightbox(img); });
+});
+</script>
+<div id="lightbox-overlay" onclick="closeLightbox()">
+  <span id="lightbox-close">&times;</span>
+  <div id="lightbox-content" onclick="event.stopPropagation()">
+    <img id="lightbox-img" src="" alt="">
+    <p id="lightbox-caption"></p>
+  </div>
+</div>
+
 </body>
 </html>

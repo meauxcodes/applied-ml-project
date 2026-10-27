@@ -7,6 +7,52 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,620&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+  .figure img { cursor: pointer; transition: opacity 0.15s; }
+  .figure img:hover { opacity: 0.85; }
+  #lightbox-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    cursor: zoom-out;
+  }
+  #lightbox-overlay.open { display: flex; }
+  #lightbox-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: default;
+  }
+  #lightbox-content img {
+    max-width: 100%;
+    max-height: 75vh;
+    border-radius: 4px;
+    cursor: default;
+  }
+  #lightbox-caption {
+    color: #EDEFF5;
+    margin-top: 14px;
+    text-align: center;
+    max-width: 700px;
+    font-size: 0.95em;
+  }
+  #lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 28px;
+    color: #EDEFF5;
+    font-size: 2em;
+    cursor: pointer;
+    line-height: 1;
+  }
+</style>
 </head>
 <body>
 
@@ -57,10 +103,10 @@
 
   <div class="method-section">
     <span class="tag">Overview</span>
-    <p>Naive Bayes is a method of classification that takes Bayes' theorem and uses it to predict the most probable class label for any new observation. This process is based on the distribution of features that occur in each class from the training data. It starts with a guess of how common each class is, and then evidence from each feature is compiled and assembled to make predictions. The "naive" assumption is that for any given class label, every feature is treated as independent of each other. So no matter how closely correlated a single feature is to any other, their probabilities are counted independently. This is a potential problem, since two features that are closely related both count in favor of that class label, raising the confidence level for that class label. For instance, in this project's dataset, heart rate and stress are closely related, since Garmin calculates its stress score from heart rate data, specifically the timing between heartbeats. In Naive Bayes, both of those features count independently. Despite this nuance, Naive Bayes is still widely used because it is simple to implement, fast to calculate, and it has a history of performing remarkably well even when its independence assumption is not true.</p>
+    <p>Naive Bayes is a method of classification that takes Bayes' theorem and uses it to predict the most probable class label for any new observation. This process is based on the distribution of features that occur in each class from the training data. It starts with a guess of how common each class is, and then evidence from each feature is compiled and assembled to make predictions. The "naive" assumption is that for any given class label, every feature is treated as independent of each other. So no matter how closely correlated a single feature is to any other, their probabilities are counted independently. This is a potential problem, since two features that are closely related both count in favor of that class label, raising the confidence level for that class label. For instance, in this project's dataset, heart rate and stress are related (a correlation of 0.50 between resting heart rate and average stress in the training data), since Garmin calculates its stress score from heart rate data, specifically the timing between heartbeats. In Naive Bayes, both of those features count independently. Despite this nuance, Naive Bayes is still widely used because it is simple to implement, fast to calculate, and it has a history of performing remarkably well even when its independence assumption is not true.</p>
     <p>Outside of this project's aims, Naive Bayes has many real-world uses, to include examples like spam detection, where the content of emails is scanned for repetitive use of words highly correlated with spam. Another great example is network intrusion detection, where Naive Bayes is implemented to analyze network traffic and determine if it is indicative of normal use or a potential attack.</p>
-    <p>There are a couple of types of Naive Bayes to be aware of: multinomial and Bernoulli. Multinomial Naive Bayes works in terms of counts, like how many times a given word appears in an email. Bernoulli, on the other hand, works with yes/no or True/False features, such as whether each word appears at all. For example, in spam detection the word "free" is a key indicator of spam. Bernoulli would only care that the word "free" is present at all, no matter how many times that word appears in the email. Multinomial would count each time "free" is repeated and build up evidence, so that an email that says "free free free" would lean more in the camp of spam. Another point of consideration is the meaning of the words. Certain words are more indicative of spam than others. While the word "free" does have a high correlation with spam emails, it is also a common everyday word. For example, a student may ask their group partner, "Hey, are you free this weekend to go over the current status of our project?" That has a totally different meaning than a spam email saying, "Respond to this email for a free car!" Neither model really can understand the meaning of the word "free" in each email. Both also ignore the order of the words. Each, however, would only tell them apart from the other words in the email, like "weekend" or "project" versus "respond" or "car."</p>
-    <p>Lastly, in order to use a multinomial approach in this project, "binning" is likely the necessary approach. Since the data is continuous, features like heart rate would need to be transformed from individual numbers to categories like low, medium or high. A third type, Gaussian Naive Bayes, is designed for continuous measurements, so it could directly use this project's data without any binning or scaling.</p>
+    <p>There are a couple of types of Naive Bayes to be aware of: multinomial and Bernoulli. Multinomial Naive Bayes works in terms of counts, like how many times a given word appears in an email. Bernoulli, on the other hand, works with yes/no or True/False features, such as whether each word appears at all. For example, in spam detection the word "free" is a key indicator of spam. Bernoulli would only care that the word "free" is present at all, no matter how many times that word appears in the email. Multinomial would count each time "free" is repeated and build up evidence, so that an email that says "free free free" would lean more in the camp of spam. Another point of consideration is the meaning of the words. Certain words are more indicative of spam than others. While the word "free" does have a high correlation with spam emails, it is also a common everyday word. For example, a student may ask their group partner, "Hey, are you free this weekend to go over the current status of our project?" That has a totally different meaning than a spam email saying, "Respond to this email for a free car!" Neither model really can understand the meaning of the word "free" in each email. Both also ignore the order of the words. Instead, each would rely on the other words in the email, like "weekend" or "project" versus "respond" or "car," to tell the two apart.</p>
+    <p>Lastly, in order to use a multinomial approach in this project, "binning" was necessary. Since the data is continuous, features like heart rate had to be transformed from individual numbers to categories like low, medium or high. A third type, Gaussian Naive Bayes, is designed for continuous measurements, so it could directly use this project's data without any binning or scaling.</p>
     <figure class="figure">
       <img src="images/naivebayes/multinomial_vs_bernoulli.png" alt="One spam email read two ways: Multinomial counts free 3, prize 1, shipping 1; Bernoulli marks free, prize and shipping as yes" style="width:100%; max-width:640px; margin:0 auto; display:block; border-radius:4px;">
       <figcaption>This figure shows the difference between how Multinomial and Bernoulli Naive Bayes read the same email. Multinomial counts the flagged words, while Bernoulli only flags whether each word is present or not. In Multinomial, the counts matter, so the more often a word appears, the more evidence there is that the email is spam; in Bernoulli, the word simply being there is the evidence.</figcaption>
@@ -70,7 +116,7 @@
   <div class="method-section">
     <span class="tag">Data</span>
     <p>Nights were grouped by participant, and the average HRV score was recorded for each participant. For each night, that night's HRV was divided by the participant's average to get a percentage. Any night that was 80% of the participant's average or lower (at least 20% below their normal) was labeled as "low-recovery." Cutoffs of 70% and 60% were checked as well, but those only returned 3.4% and 1.0% of nights, respectively, which was not enough data to train on effectively. All in all, 1,920 out of 18,728 nights (10.3%) were labeled as "low-recovery."</p>
-    <p>Naive Bayes is a supervised learning model. This means that the data is labeled and the model seeks to understand the common ground in each observation that shares a label. Simply put, if a night is labeled as low-recovery, the model looks to figure out which features tend to show up alongside the low-recovery outcome. For example, if a kid learning to do addition never knew if the answers they were generating were correct, they would never have confidence in their understanding. Likewise, models like Naive Bayes need an answer key to solidify the rules they come up with and to provide confidence in their predictions moving forward. For the train/test split, the data was split among participants so that nobody was in both data sets, because every person has a unique signature in their individual metrics. By having a person's nights in both, the model could get insight into the test's answer key. Using StratifiedGroupKFold, the participants were separated into groupings close to an 80/20 split, while keeping the share of low-recovery nights about the same in both sets. A random state of 42 was used so that the experiment was reproducible and did not produce a different split every time it was run. The training set contains 15,003 nights from 79 people, and the testing set contains 3,725 nights from 19 people, with about 10% of nights labeled low recovery in each.</p>
+    <p>Naive Bayes is a supervised learning model. This means that the data is labeled and the model seeks to understand the common ground in each observation that shares a label. Simply put, if a night is labeled as low-recovery, the model looks to figure out which features tend to show up alongside the low-recovery outcome. For example, if a kid learning to do addition never knew if the answers they were generating were correct, they would never have confidence in their understanding. Likewise, models like Naive Bayes need an answer key to solidify the rules they come up with and to provide confidence in their predictions moving forward. For the train/test split, the data was split among participants so that nobody was in both data sets, because every person has a unique signature in their individual metrics. By having a person's nights in both, the model could get insight into the test's answer key. Using StratifiedGroupKFold, the participants were separated into groupings close to an 80/20 split, while keeping the share of low-recovery nights about the same in both sets. A random state of 42 was used so that the experiment was reproducible and did not produce a different split every time it was run. The training set contains 15,003 nights from 79 people, and the testing set contains 3,725 nights from 19 people, with about 10% of nights labeled low-recovery in each.</p>
     <p>Multinomial Naive Bayes was required for this project, although seeing as Gaussian Naive Bayes was designed to analyze continuous variables directly, that method may be better suited to this dataset. Since Multinomial NB is built for count data, each continuous feature had to be converted into count-like indicators. SKLearn's KBinsDiscretizer was used to split each feature into low, medium, and high bins, with each bin becoming its own 0 or 1 column. The two exercise-duration features received only two bins because many nights recorded zero minutes. One empty bin was removed from each of those two features, so the resulting number of binned features came out to be 49. Bin edges were determined by the quantile strategy, so each bin held roughly the same number of nights. Equal-width bins were not used because features such as daily steps are skewed. This would have forced most observations into a single bin and would have left that feature with little ability to distinguish between observations. Bin edges were learned from the training set only and then applied to the test set, so the test set had no influence on the modeling process. This allowed testing observations to go unseen and ensured that the model's accuracy is a reflection of its performance on observations it has never encountered.</p>
     <div class="linkrow">
       <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/naivebayes/nb_labeled.csv" target="_blank">Labeled data (nb_labeled.csv) — link</a>
@@ -97,7 +143,7 @@
 
   <div class="method-section">
     <span class="tag">Code</span>
-    <p>The code for this section was written in Python using pandas, NumPy, seaborn, matplotlib, and scikit-learn (sklearn). Pandas and NumPy were used primarily for dataframe management, matplotlib and seaborn were used for plotting figures, and sklearn was used for the train/test split, binning, both Naive Bayes models, and metric reporting.</p>
+    <p>The code for this section was written in Python using pandas, NumPy, seaborn, matplotlib, and scikit-learn (sklearn). Pandas and NumPy were used primarily for dataframe management, matplotlib and seaborn were used for plotting figures, and sklearn was used for the train/test split, binning, scaling for the Gaussian model, both Naive Bayes models, and metric reporting.</p>
     <div class="linkrow">
       <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/scripts/notebooks/naive_bayes.ipynb" target="_blank">Naive Bayes code (naive_bayes.ipynb) — link</a>
     </div>
@@ -118,7 +164,7 @@
 
   <div class="method-section">
     <span class="tag">Conclusions</span>
-    <p>The watch data collected provides some indications about the nights that were labeled as low recovery, but did not provide enough to spot a low-recovery night with reliable accuracy. Most of the low-recovery nights were not captured by the model, and most of the nights that were flagged turned out to be false alarms. One probable reason for this phenomenon is that a lot of what affects recovery on any given day is never really captured by a wearable. Some of these categories could be the mental load of the day, emotional responses to a given day's events, illness, or even alcohol usage. The wearable's stress scores are a reflection of an individual's heart rhythm, but they cannot tell the difference between a hard workout and a really stressful conversation. That aside, these tools could still be useful, capable of pointing a spotlight at a potential problem area or drawing attention to individual days that may be worth another look. However, they should not be used to make definitive claims about an individual's metrics or to conclude that certain factors cause certain results, since the findings show association rather than cause, and the low-recovery label is only an estimate based on heart rate variability rather than a clinical diagnosis.</p>
+    <p>The watch data collected provides some indications about the nights that were labeled as low-recovery, but did not provide enough to spot a low-recovery night with reliable accuracy. Most of the low-recovery nights were not captured by the model, and most of the nights that were flagged turned out to be false alarms. One probable reason for this phenomenon is that a lot of what affects recovery on any given day is never really captured by a wearable. Some of these categories could be the mental load of the day, emotional responses to a given day's events, illness, or even alcohol usage. The wearable's stress scores are a reflection of an individual's heart rhythm, but they cannot tell the difference between a hard workout and a really stressful conversation. That aside, these tools could still be useful, capable of pointing a spotlight at a potential problem area or drawing attention to individual days that may be worth another look. However, they should not be used to make definitive claims about an individual's metrics or to conclude that certain factors cause certain results, since the findings show association rather than cause, and the low-recovery label is only an estimate based on heart rate variability rather than a clinical diagnosis.</p>
   </div>
 </div>
 
@@ -205,5 +251,32 @@
   frame();
 })();
 </script>
+<script>
+function openLightbox(imgEl) {
+  var figure = imgEl.closest('figure');
+  var caption = figure ? figure.querySelector('figcaption') : null;
+  document.getElementById('lightbox-img').src = imgEl.src;
+  document.getElementById('lightbox-img').alt = imgEl.alt;
+  document.getElementById('lightbox-caption').textContent = caption ? caption.textContent : '';
+  document.getElementById('lightbox-overlay').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox-overlay').classList.remove('open');
+}
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeLightbox();
+});
+document.querySelectorAll('.figure img').forEach(function(img){
+  img.addEventListener('click', function(){ openLightbox(img); });
+});
+</script>
+<div id="lightbox-overlay" onclick="closeLightbox()">
+  <span id="lightbox-close">&times;</span>
+  <div id="lightbox-content" onclick="event.stopPropagation()">
+    <img id="lightbox-img" src="" alt="">
+    <p id="lightbox-caption"></p>
+  </div>
+</div>
+
 </body>
 </html>
