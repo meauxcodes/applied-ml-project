@@ -113,7 +113,8 @@
 
   <div class="method-section">
     <span class="tag">Overview</span>
-    <p>Overview text goes here.</p>
+    <p>Bagging builds each tree on its own random sample of the data, drawn with replacement and the same size as the dataset, so the trees are independent and can be built in parallel. Boosting builds trees one after another. After each tree, the rows it got wrong are given more weight, so that together they make up half of the total weight, while the correctly predicted rows lose weight. Each tree's vote is then weighted by its error rate: a low-error tree gets a large say, a higher-error tree gets less, and a tree no better than a coin flip gets no say at all. The final prediction is a weighted vote of all the trees.</p>
+    <p>AdaBoost usually uses stumps, which are trees with a single split. A stump on its own is only a little better than guessing, so it always misclassifies some rows. Those misclassified rows are what give the next stump something to focus on. A large tree that got every training row right would leave no mistakes to reweight, and the boosting would stop improving. Since the weights are reassigned at every round, each new stump can split on a different feature or a different cutoff than the previous stumps.</p>
     <figure class="figure">
       <div class="ph">[ image placeholder ]</div>
       <figcaption>Overview figure 1.</figcaption>
@@ -127,22 +128,23 @@
   <div class="method-section">
     <span class="tag">Data</span>
     <p>Data Prep text goes here.</p>
+    <!-- Links and reused Decision Tree images placed by Claude Nov 17 (layout only). Captions are yours to write. -->
     <div class="linkrow">
-      <a href="#">Labeled data — link</a>
-      <a href="#">Training set — link</a>
-      <a href="#">Testing set — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/decisiontree/dt_labeled.csv" target="_blank">Labeled data (dt_labeled.csv) — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/decisiontree/dt_train.csv" target="_blank">Training set (dt_train.csv) — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/decisiontree/dt_test.csv" target="_blank">Testing set (dt_test.csv) — link</a>
     </div>
     <figure class="figure">
-      <div class="ph">[ image placeholder ]</div>
-      <figcaption>Sample of the labeled data.</figcaption>
+      <img src="images/dectrees/dt_labeled_data.png" alt="Sample rows of the labeled dataset with the low_oxygen label column" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>[Caption — your words]</figcaption>
     </figure>
     <figure class="figure">
-      <div class="ph">[ image placeholder ]</div>
-      <figcaption>Sample of the training set.</figcaption>
+      <img src="images/dectrees/dt_training_data.png" alt="Sample rows of the training set" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>[Caption — your words]</figcaption>
     </figure>
     <figure class="figure">
-      <div class="ph">[ image placeholder ]</div>
-      <figcaption>Sample of the testing set.</figcaption>
+      <img src="images/dectrees/dt_testing_data.png" alt="Sample rows of the testing set" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>[Caption — your words]</figcaption>
     </figure>
   </div>
 

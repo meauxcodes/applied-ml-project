@@ -8,6 +8,10 @@ dataset_without_spo2["hrv_personal_average"] = dataset_without_spo2.groupby("par
 dataset_without_spo2["hrv_ratio"] = dataset_without_spo2["lastNightAvg"]/dataset_without_spo2["hrv_personal_average"]
 dataset_without_spo2["low_recovery"] = dataset_without_spo2["hrv_ratio"]<=.8
 
+### Peel off a copy for the regression notebook with hrv_ratio in it
+regression_dataset = dataset_without_spo2.drop(columns= ["hrv_personal_average", "lastNightAvg", "lastNight5MinHigh"])
+regression_dataset.to_csv("../data/clean/regression/regression_labeled.csv",index = False)
+
 ### Label low oxygen nights
 dataset_with_spo2["spo2_z"] = (dataset_with_spo2["spo2_mean"]-dataset_with_spo2["spo2_mean"].mean())/dataset_with_spo2["spo2_mean"].std()
 dataset_with_spo2["low_oxygen"] = dataset_with_spo2["spo2_z"]<=-1
@@ -36,3 +40,5 @@ dt_answer_key = [
 print(f"Percent of nights where spo2 is at or below -1 z: {((dataset_with_spo2["spo2_z"]<=-1).sum()/len(dataset_with_spo2)*100).round(3)}%")
 dataset_with_spo2 = dataset_with_spo2.drop(columns = dt_answer_key)
 dataset_with_spo2.to_csv("../data/clean/decisiontree/dt_labeled.csv", index = False)
+
+

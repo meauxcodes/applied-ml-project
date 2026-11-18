@@ -113,7 +113,7 @@
 
   <div class="method-section">
     <span class="tag">Overview</span>
-    <p>Overview text goes here.</p>
+    <p>Linear regression predicts a specific number. Here, it combines all of the features into a formula that predicts hrv_ratio, a night's HRV compared with that person's own average. Logistic regression instead predicts a probability between 0 and 1 that a night belongs to a certain class, for example a 0.76 chance of low recovery based on the same features. The weighted sum, called the logit, is turned into odds by raising e to the power of the logit. The odds are then converted to a probability by dividing them by one plus the odds. Together, these steps are the sigmoid function, which squeezes any score into a value between 0 and 1. A threshold, usually 0.5, turns the probability into a class: nights above 0.5 are labeled low recovery, and nights below it are labeled normal.</p>
     <figure class="figure">
       <div class="ph">[ image placeholder ]</div>
       <figcaption>Overview figure 1.</figcaption>
@@ -127,22 +127,25 @@
   <div class="method-section">
     <span class="tag">Data</span>
     <p>Data Prep text goes here.</p>
+    <!-- Links and images placed by Claude Nov 17 (layout only). Captions are yours to write. -->
     <div class="linkrow">
-      <a href="#">Labeled data — link</a>
-      <a href="#">Training set — link</a>
-      <a href="#">Testing set — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/regression/regression_labeled.csv" target="_blank">Labeled data (regression_labeled.csv) — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/regression/linear_regression_train.csv" target="_blank">Linear training set (linear_regression_train.csv) — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/regression/linear_regression_test.csv" target="_blank">Linear testing set (linear_regression_test.csv) — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/naivebayes/nb_train.csv" target="_blank">Logistic training set (nb_train.csv) — link</a>
+      <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/naivebayes/nb_test.csv" target="_blank">Logistic testing set (nb_test.csv) — link</a>
     </div>
     <figure class="figure">
-      <div class="ph">[ image placeholder ]</div>
-      <figcaption>Sample of the labeled data.</figcaption>
+      <img src="images/regression/hrv_ratio_regression.png" alt="Sample rows of the labeled regression dataset with the hrv_ratio target and low_recovery label" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>[Caption — your words]</figcaption>
     </figure>
     <figure class="figure">
-      <div class="ph">[ image placeholder ]</div>
-      <figcaption>Sample of the training set.</figcaption>
+      <img src="images/naivebayes/nb_training_data.png" alt="Sample rows of the training set" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>[Caption — your words]</figcaption>
     </figure>
     <figure class="figure">
-      <div class="ph">[ image placeholder ]</div>
-      <figcaption>Sample of the testing set.</figcaption>
+      <img src="images/naivebayes/nb_testing_data.png" alt="Sample rows of the testing set" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>[Caption — your words]</figcaption>
     </figure>
   </div>
 
@@ -150,16 +153,22 @@
     <span class="tag">Code</span>
     <p>Code text goes here.</p>
     <div class="linkrow">
-      <a href="#">Regression notebook — link</a>
+<a href="https://github.com/meauxcodes/applied-ml-project/blob/main/scripts/notebooks/regression.ipynb" target="_blank">Regression code (regression.ipynb) — link</a>
     </div>
   </div>
 
   <div class="method-section">
     <span class="tag">Results</span>
+    <!-- His words, approved Nov 17 (two linear coefficients). Rest of Results to be written Fri. -->
+    <p>A coefficient of 0.087 for overallSleepScore means that for every one standard deviation increase in overallSleepScore, a person's predicted HRV ratio is roughly 9% higher, holding all other features constant. A coefficient of 0.018 for activeKilocalories means that for every one standard deviation increase in activeKilocalories, a person's predicted HRV ratio is roughly 2% higher, holding all other features constant.</p>
     <p>Results text goes here.</p>
     <figure class="figure">
-      <div class="ph">[ image placeholder ]</div>
-      <figcaption>Results figure.</figcaption>
+      <img src="images/regression/actual_vs_predicted_hrv_ratio.png" alt="Scatter plot of actual versus predicted HRV ratio on the testing set with a dashed perfect-prediction line" style="width:100%; max-width:640px; margin:0 auto; display:block; border-radius:4px;">
+      <figcaption>[Caption — your words]</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="images/regression/logistic_confusion_matrix.png" alt="Confusion matrix for logistic regression on the testing set" style="width:100%; max-width:560px; margin:0 auto; display:block; border-radius:4px;">
+      <figcaption>[Caption — your words]</figcaption>
     </figure>
   </div>
 

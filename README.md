@@ -14,7 +14,9 @@ Live site: https://meauxcodes.github.io/applied-ml-project/
 - `pca.html` - PCA
 - `naivebayes.html` - Naive Bayes (low-recovery nights)
 - `dectrees.html` - Decision Trees (low-oxygen nights)
-- `regression.html`, `adaboost.html`, `gradientboosting.html`, `xgboost.html` - later modules (in progress)
+- `regression.html` - Linear regression (hrv_ratio) and logistic regression (low-recovery nights)
+- `adaboost.html` - AdaBoost (low-oxygen nights)
+- `gradientboosting.html`, `xgboost.html` - Module 5 (placeholders)
 - `conclusions.html` - Conclusions
 - `about.html` - About
 - `style.css` - shared styling
@@ -22,9 +24,9 @@ Live site: https://meauxcodes.github.io/applied-ml-project/
 ## Folders
 
 - `data/raw` - de-identified joined cohort data and the single-participant Garmin data
-- `data/clean` - cleaned datasets and the data dictionary, with one subfolder per method (`clustering`, `pca`, `naivebayes`, `decisiontree`) holding that method's labeled, training and testing files
+- `data/clean` - cleaned datasets and the data dictionary, with one subfolder per method (`clustering`, `pca`, `naivebayes`, `decisiontree`, `regression`) holding that method's labeled, training and testing files
 - `scripts` - the data pipeline (stacking, respiration, pulse-ox, joining, de-identification, cleaning, labeling) and the personal Garmin pull and visualization code
-- `scripts/notebooks` - analysis notebooks (EDA, labels, clustering, PCA, Naive Bayes, Decision Trees)
+- `scripts/notebooks` - analysis notebooks (EDA, labels, clustering, PCA, Naive Bayes, Decision Trees, Regression)
 - `scripts/pulse_ox` - nightly blood oxygen values and pulse-ox notebooks
 - `images` - figures used on the site, with one subfolder per page
 
@@ -38,7 +40,7 @@ Live site: https://meauxcodes.github.io/applied-ml-project/
 4. `cohort_joining.py` - joins everything into one table per participant-night
 5. `deidentify.py` - replaces real participant IDs with P1 to P98
 6. `cohort_cleaning.py` - removes missing and impossible values
-7. `labelling.py` - builds the low-recovery (Naive Bayes) and low-oxygen (Decision Trees) labels
+7. `labelling.py` - builds the low-recovery (Naive Bayes) and low-oxygen (Decision Trees) labels, and saves a regression copy that keeps `hrv_ratio` as the linear regression target
 
 ## Privacy
 
@@ -46,7 +48,7 @@ The raw LabFront export and the joined table with real participant IDs are store
 
 ## Status
 
-Modules 1 to 3 are complete (Introduction, Data Prep / EDA, Clustering, PCA, Naive Bayes, Decision Trees). The remaining method pages are placeholders until their modules. The graded Module 2 version of the site is preserved at the `module2-graded` tag.
+Modules 1 to 3 are complete (Introduction, Data Prep / EDA, Clustering, PCA, Naive Bayes, Decision Trees). Module 4 (Regression, AdaBoost) is in progress on the `module4` branch. Gradient Boosting and XGBoost are placeholders until Module 5. The graded Module 2 version of the site is preserved at the `module2-graded` tag.
 
 ## Hosting
 
