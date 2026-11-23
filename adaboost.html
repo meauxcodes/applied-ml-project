@@ -118,6 +118,20 @@
   <div class="method-section">
     <span class="tag">Data</span>
     <p>Because AdaBoost is built from decision trees and predicts the same target (low-oxygen nights), the same dataset and participant split from the Decision Trees page were used: 8,729 nights from 47 participants. Just like on the Decision Trees page, a night is labeled low oxygen when its SpO2 falls one standard deviation or more below the group average (z ≤ −1). The training set contains 7,029 nights from 35 people (15.7% low oxygen). The testing set contains 1,700 nights from 12 people (12.5% low oxygen). No person appears in both sets. BMR was again removed because it is unique to each person and says nothing about the night itself.</p>
+    <figure class="figure">
+      <img src="images/dectrees/dt_labeled_data.png" alt="Sample rows of the labeled dataset with the low_oxygen label column" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>This is a sample of the labeled data which has been transposed for visibility purposes and limited to the first eight observations, all from participant P2. The "low_oxygen" field at the bottom is the label for this dataset that the model aims to learn how to predict. Durations are in milliseconds.</figcaption>
+    </figure>
+    <div class="figure-grid">
+    <figure class="figure">
+      <img src="images/dectrees/dt_training_data.png" alt="Sample rows of the training set" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>This is a sample of the training data, which has been transposed for visibility purposes and limited to the first eight observations. This data subset contains 7,029 observations across 35 people. The identifiers and BMR were removed, leaving 21 features plus "low_oxygen."</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="images/dectrees/dt_testing_data.png" alt="Sample rows of the testing set" style="width:100%; display:block; border-radius:4px;">
+      <figcaption>This is a sample of the testing data, which has been transposed for visibility purposes and limited to the first eight observations. This data subset contains 1,700 observations across 12 people with 21 features plus "low_oxygen." None of these 12 people appear in the training set.</figcaption>
+    </figure>
+    </div>
     <p>One-hot encoding was not necessary because each feature that the model used was already a numeric value. In preprocessing, all of the text-based columns, like &quot;cohort,&quot; were removed.</p>
     <figure class="figure">
       <img src="images/adaboost/adaboost_dtypes.png" alt="Data types of every feature in the AdaBoost training set, all float64 or int64" style="width:100%; max-width:480px; margin:0 auto; display:block; border-radius:4px;">
@@ -129,18 +143,6 @@
       <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/decisiontree/dt_train.csv" target="_blank">Training set (dt_train.csv) — link</a>
       <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/decisiontree/dt_test.csv" target="_blank">Testing set (dt_test.csv) — link</a>
     </div>
-    <figure class="figure">
-      <img src="images/dectrees/dt_labeled_data.png" alt="Sample rows of the labeled dataset with the low_oxygen label column" style="width:100%; display:block; border-radius:4px;">
-      <figcaption>This is a sample of the labeled data which has been transposed for visibility purposes and limited to the first eight observations, all from participant P2. The "low_oxygen" field at the bottom is the label for this dataset that the model aims to learn how to predict. Durations are in milliseconds.</figcaption>
-    </figure>
-    <figure class="figure">
-      <img src="images/dectrees/dt_training_data.png" alt="Sample rows of the training set" style="width:100%; display:block; border-radius:4px;">
-      <figcaption>This is a sample of the training data, which has been transposed for visibility purposes and limited to the first eight observations. This data subset contains 7,029 observations across 35 people. The identifiers and BMR were removed, leaving 21 features plus "low_oxygen."</figcaption>
-    </figure>
-    <figure class="figure">
-      <img src="images/dectrees/dt_testing_data.png" alt="Sample rows of the testing set" style="width:100%; display:block; border-radius:4px;">
-      <figcaption>This is a sample of the testing data, which has been transposed for visibility purposes and limited to the first eight observations. This data subset contains 1,700 observations across 12 people with 21 features plus "low_oxygen." None of these 12 people appear in the training set.</figcaption>
-    </figure>
   </div>
 
   <div class="method-section">
