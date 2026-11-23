@@ -103,7 +103,7 @@
 
   <div class="method-section">
     <span class="tag">Overview</span>
-    <p>Bagging builds each tree on its own random sample of the data, drawn with replacement and the same size as the dataset, so the trees are independent and can be built in parallel. Boosting builds trees one after another. After each tree, the rows it got wrong are given more weight, so that together they make up half of the total weight, while the correctly predicted rows lose weight. Each tree's vote is then weighted by its error rate: a low-error tree gets a large say, a higher-error tree gets less, and a tree no better than a coin flip gets no say at all. The final prediction is a weighted vote of all the trees.</p>
+    <p>Bagging builds each tree on its own random sample of the data, drawn with replacement and the same size as the dataset, so the trees are independent and can be built in parallel. Boosting builds trees one after another. After each tree, the rows it got wrong are given more weight, so that together they make up half of the total weight, while the correctly predicted rows lose weight. Each tree's vote is then weighted by its error rate: a low-error tree gets a large say, a higher-error tree gets less, and a tree no better than a coin flip gets no say at all. Trees with lower error rates get a higher alpha. The final prediction is a weighted vote of all the trees.</p>
     <p>AdaBoost usually uses stumps, which are trees with a single split. A stump on its own is only a little better than guessing, so it always misclassifies some rows. Those misclassified rows are what give the next stump something to focus on. A large tree that got every training row right would leave no mistakes to reweight, and the boosting would stop improving. Since the weights are reassigned at every round, each new stump can split on a different feature or a different cutoff than the previous stumps.</p>
     <figure class="figure">
       <img src="images/adaboost/overview_adaboost_convergence.png" alt="AdaBoost test error dropping as the number of trees grows, with single-tree and dummy baselines" style="width:100%; max-width:640px; margin:0 auto; display:block; border-radius:4px;">
@@ -119,6 +119,10 @@
     <span class="tag">Data</span>
     <p>Because AdaBoost is built from decision trees and predicts the same target (low-oxygen nights), the same dataset and participant split from the Decision Trees page were used: 8,729 nights from 47 participants. Just like on the Decision Trees page, a night is labeled low oxygen when its SpO2 falls one standard deviation or more below the group average (z ≤ −1). The training set contains 7,029 nights from 35 people (15.7% low oxygen). The testing set contains 1,700 nights from 12 people (12.5% low oxygen). No person appears in both sets. BMR was again removed because it is unique to each person and says nothing about the night itself.</p>
     <p>One-hot encoding was not necessary because each feature that the model used was already a numeric value. In preprocessing, all of the text-based columns, like &quot;cohort,&quot; were removed.</p>
+    <figure class="figure">
+      <img src="images/adaboost/adaboost_dtypes.png" alt="Data types of every feature in the AdaBoost training set, all float64 or int64" style="width:100%; max-width:480px; margin:0 auto; display:block; border-radius:4px;">
+      <figcaption>Here it can be seen that every feature in the dataset is either a float64 or an int64. This means there are no categorical columns, and therefore one-hot encoding is not necessary.</figcaption>
+    </figure>
     <!-- Links and reused Decision Tree images placed by Claude Nov 17 (layout only). Captions are yours to write. -->
     <div class="linkrow">
       <a href="https://github.com/meauxcodes/applied-ml-project/blob/main/data/clean/decisiontree/dt_labeled.csv" target="_blank">Labeled data (dt_labeled.csv) — link</a>
@@ -150,6 +154,7 @@
   <div class="method-section">
     <span class="tag">Results</span>
     <p>Using GridSearchCV, AdaBoost models with different combinations of parameters (5 learning rates and 5 tree counts) were ranked by their average validation balanced accuracy, scored on groups of 7 training participants at a time, and the test participants were never seen during tuning. The top two were a model with 400 trees and a learning rate of 0.01 (0.648) and a model with 50 trees and a learning rate of 0.1 (0.646). Since the two were practically tied (a 0.002 difference), the simpler model of 50 trees and a learning rate of 0.1 was chosen.</p>
+    <p>The baseline accuracy is 0.875, meaning that if the model guessed &quot;normal oxygen&quot; for every observation, it would be 87.5% accurate. The model's actual accuracy was 0.591. However, its recall of 79.3% means it does a decent job of flagging the low-oxygen nights that exist. The accuracy is low because the model raises a lot of false alarms.</p>
     <p>AdaBoost was successful in catching 169 out of 213 low-oxygen nights (about 4 in 5). However, it flagged 651 normal nights as low oxygen, because the balanced weighting made missing a low-oxygen night cost more than raising a false alarm.</p>
     <figure class="figure">
       <img src="images/adaboost/balanced_accuracy_by_learning_rate.png" alt="Validation balanced accuracy as stumps are added, one line per learning rate" style="width:100%; max-width:640px; margin:0 auto; display:block; border-radius:4px;">
